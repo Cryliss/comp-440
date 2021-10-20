@@ -3,9 +3,9 @@
 Repository for COMP 440: Database Design Group Project
 
 ## Group Members
-Sabra Bilodeau
-Faizan Hussain
-Shawn Morrison
+Sabra Bilodeau  
+Faizan Hussain  
+Shawn Morrison  
 
 
 # INSTRUCTIONS FOR LOCAL HOSTING
