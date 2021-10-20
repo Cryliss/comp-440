@@ -28,30 +28,44 @@ def add():
                 'status': 200,
                 'message': 'User added successfully!',
             }
-            respone = jsonify(message)
-            respone.status_code = 200
-
-            # Close our connection
-            cursor.close()
-            conn.close()
-            return respone
+            response = jsonify(message)
+            response.status_code = 200
+            return response
         else:
             return not_found()
     except Exception as e:
         print(e)
     finally:
-        return response
+        # Close our connection
+        cursor.close()
+        conn.close()
 
-@app.route('/user')
-def user():
+@app.route('/users')
+def users():
 	try:
 		conn = mysql.connect()
 		cursor = conn.cursor(pymysql.cursors.DictCursor)
 		cursor.execute("SELECT username, email, firstName, lastName FROM user")
 		userRows = cursor.fetchall()
-		respone = jsonify(userRows)
-		respone.status_code = 200
-		return respone
+		response = jsonify(userRows)
+		response.status_code = 200
+		return response
+	except Exception as e:
+		print(e)
+	finally:
+		cursor.close()
+		conn.close()
+
+@app.route('/user/<string:username>')
+def user(username):
+	try:
+		conn = mysql.connect()
+		cursor = conn.cursor(pymysql.cursors.DictCursor)
+		cursor.execute("SELECT username, email, firstName, lastName FROM user WHERE username =%s", username)
+		userRow = cursor.fetchone()
+		response = jsonify(userRow)
+		response.status_code = 200
+		return response
 	except Exception as e:
 		print(e)
 	finally:
@@ -64,9 +78,9 @@ def not_found(error=None):
         'status': 404,
         'message': 'Record not found: ' + request.url,
     }
-    respone = jsonify(message)
-    respone.status_code = 404
-    return respone
+    response = jsonify(message)
+    response.status_code = 404
+    return response
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port='8080', debug=True)
