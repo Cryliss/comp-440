@@ -72,6 +72,39 @@ def user(username):
 		cursor.close()
 		conn.close()
 
+@app.route('/delete/<string:username>', methods=['DELETE'])
+def delete_emp(username):
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM user WHERE username =%s", (username,))
+        conn.commit()
+        response = jsonify('User deleted successfully!')
+        response.status_code = 200
+        return response
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+@app.route('/initializedb')
+def initializedb():
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        for line in open("/Users/sabra/go/src/comp-440/sql/users2.sql"):
+            cursor.execute(line)
+        
+        response = jsonify('Database successfully initialized!')
+        response.status_code = 200
+        return response
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
+
 @app.errorhandler(404)
 def not_found(error=None):
     message = {

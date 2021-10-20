@@ -3,6 +3,11 @@
 ## API Calls
 Current functioning API calls are as follows:
 
+`http://127.0.0.1:8080/initializedb`
+
+Initializes the database User table.
+Response should be: `Database successfully initialized!`
+
 `http://127.0.0.1:8080/add`
 
 This is a POST request - need to test it using https://reqbin.com/.  
