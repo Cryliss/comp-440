@@ -32,6 +32,7 @@ Response data should be
 
 `http://127.0.0.1:8080/users`  
 
+Response data should be  
 ```json
 [
   {
@@ -63,6 +64,7 @@ Response data should be
 
 `http://127.0.0.1:8080/user/comp440_test`  
 
+Response data should be  
 ```json
 
 {
@@ -70,5 +72,17 @@ Response data should be
   "firstName": "Test",
   "lastName": "User",
   "username": "comp440_test"
+}
+```
+
+`http://127.0.0.1:8080/delete/comp440_test`
+
+Delete the test user you just created
+
+Response data should be   
+```json
+{
+  "message": "Usercomp440_testdeleted successfully!",
+  "status": 200
 }
 ```

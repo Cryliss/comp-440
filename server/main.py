@@ -16,7 +16,8 @@ def add():
         _passconfirmed = _json['passConfirmed']
 
         if _username and _firstname and _lastname and _email and _passconfirmed and request.method == 'POST':
-            sqlQuery = "CALL sp_register(%s, %s, %s, %s, %s, @registered, @message)"
+            # NEED TO PARSE ITEMS TO CHECK FOR SQL INJECTION 
+            sqlQuery = "INSERT INTO user (username, password, firstName, lastName, email) VALUES (%s, %s, %s, %s, %s)"
             bindData = (_username, _passconfirmed, _firstname, _lastname, _email)
             conn = mysql.connect()
 
@@ -72,14 +73,18 @@ def user(username):
 		cursor.close()
 		conn.close()
 
-@app.route('/delete/<string:username>', methods=['DELETE'])
+@app.route('/delete/<string:username>')
 def delete_emp(username):
     try:
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM user WHERE username =%s", (username,))
         conn.commit()
-        response = jsonify('User deleted successfully!')
+        message = {
+            'status': 200,
+            'message': 'User ' + username + ' deleted successfully!',
+        }
+        response = jsonify(message)
         response.status_code = 200
         return response
     except Exception as e:
@@ -95,8 +100,11 @@ def initializedb():
         cursor = conn.cursor()
         for line in open("/Users/sabra/go/src/comp-440/sql/users2.sql"):
             cursor.execute(line)
-        
-        response = jsonify('Database successfully initialized!')
+        message = {
+            'status': 200,
+            'message': 'Database successfully initialized!',
+        }
+        response = jsonify(message)
         response.status_code = 200
         return response
     except Exception as e:
