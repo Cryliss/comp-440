@@ -81,7 +81,7 @@ Tests SQL injection protection
 Response should be  
 ```json
 {
-  "message": "Go away",
+  "message": "Im a teapot. Go away",
   "status": 418
 }
 ```
