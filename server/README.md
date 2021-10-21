@@ -75,6 +75,17 @@ Response data should be
 }
 ```
 
+`http://127.0.0.1:8080/api/user/;%20DROP%20TABLE%20user;`  
+Tests SQL injection protection
+
+Response should be  
+```json
+{
+  "message": "Go away",
+  "status": 418
+}
+```
+
 `http://127.0.0.1:8080/api/delete/comp440_test`
 
 Delete the test user you just created
