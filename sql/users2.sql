@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS user;
-CREATE TABLE user ( username varchar(255) NOT NULL, password varchar(255) NOT NULL, firstName varchar(255) NOT NULL, lastName varchar(255) NOT NULL, email varchar(255) NOT NULL);
+CREATE TABLE user ( username varchar(255) NOT NULL, password varchar(255) NOT NULL DEFAULT 'pass1234', firstName varchar(255) NOT NULL, lastName varchar(255) NOT NULL, email varchar(255) NOT NULL);
 ALTER TABLE user ADD CONSTRAINT unique_email UNIQUE (email);
 ALTER TABLE user ADD PRIMARY KEY (username);
 START TRANSACTION;
