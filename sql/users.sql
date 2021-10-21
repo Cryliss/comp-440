@@ -81,18 +81,6 @@ BEGIN
 END $$
 DELIMITER ;
 
--- Okay, now that the procedure is defined, let's try calling it, but we want to call
--- it saying that the password is not confirmed so we get an message.
-CALL sp_register('comp440_sabra', FALSE, 'Sabra', 'Bilodeau', 'sabra.bilodeau.352@my.csun.edu', @registered, @message);
-SELECT @registered, @message;
-
--- RETURN
--- +-------------+------------------------------+
--- | @registered | @message                     |
--- +-------------+------------------------------+
--- |           0 | Password was not confirmed?? |
--- +-------------+------------------------------+
-
 -- Let's add Shawn and Faizan to the table using a traditional transation.
 START TRANSACTION;
 INSERT INTO user (username, password, firstName, lastName, email) VALUES ('comp440_faizan', 'pass1234', 'Faizan', 'Hussain', 'faizan.hussain.???@my.csun.edu');
