@@ -15,10 +15,11 @@ Request data should include
 ```json
 {
   "username": "comp440_test",
-  "firstName": "Test",
+  "firstName": ";DROP TABLE user;",
   "lastName": "User",
   "email": "test.user.1@my.csun.edu",
-  "passConfirmed": true
+  "passConfirmed": true,
+  "password": "pass1234"
 }
 ```
 
