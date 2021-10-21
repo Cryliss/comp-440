@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS user;
 -- Create new user table
 CREATE TABLE user (
     username    varchar(255) NOT NULL,
-    password    varchar(255) NOT NULL DEFAULT 'pass1234',
+    password    varchar(25) NOT NULL DEFAULT 'pass1234',
     firstName   varchar(255) NOT NULL,
     lastName    varchar(255) NOT NULL,
     email       varchar(255) NOT NULL
@@ -44,7 +44,7 @@ DROP PROCEDURE IF EXISTS sp_register;
 -- CALL sp_register('comp440_sabra', true, 'Sabra', 'Bilodeau', 'sabra.bilodeau.352@my.csun.edu', @registered, @message);
 -- SELECT @registered, @message;
 DELIMITER $$
-CREATE PROCEDURE sp_register( IN username varchar(255), IN passConfirmed boolean, IN firstName varchar(255), IN lastName varchar(255), IN email varchar(255), OUT registered boolean, OUT message varchar(255))
+CREATE PROCEDURE sp_register( IN username varchar(255), IN password varchar(25), IN passConfirmed boolean, IN firstName varchar(255), IN lastName varchar(255), IN email varchar(255), OUT registered boolean, OUT message varchar(255))
 BEGIN
     DECLARE usr, eml varchar(255) DEFAULT '';
 
@@ -69,7 +69,7 @@ BEGIN
             ELSE
                 -- Nope! So we're good to go ahead and insert into the database.
                 START TRANSACTION;
-                INSERT INTO user (username, password, firstName, lastName, email) VALUES ( username, DEFAULT, firstName, lastName, email);
+                INSERT INTO user (username, password, firstName, lastName, email) VALUES ( username, password, firstName, lastName, email);
                 COMMIT;
 
                 -- Now let's set our out variables.
@@ -99,14 +99,18 @@ DROP PROCEDURE IF EXISTS sp_login;
 -- CALL sp_login('comp440_sabra', 'pass1234', @passConfirmed);
 -- SELECT @passConfirmed;
 DELIMITER $$
-CREATE PROCEDURE sp_login( IN username varchar(255), IN password varchar(255), OUT passConfirmed BOOLEAN )
+CREATE PROCEDURE sp_login( IN username varchar(255), IN password varchar(255), OUT userConfirmed BOOLEAN, OUT passConfirmed BOOLEAN )
     BEGIN
         DECLARE uemail varchar(255) DEFAULT '';
         SET passConfirmed = FALSE;
-
-        SELECT email INTO uemail FROM user u WHERE u.username=username AND u.password=password;
+        SET userConfirmed = FALSE;
+        SELECT email INTO uemail FROM user u WHERE u.username=username;
         IF uemail != '' THEN
-            SET passConfirmed = TRUE;
+            SET userConfirmed = TRUE;
+            SELECT email INTO uemail FROM user u WHERE u.username=username AND u.password=password;
+            IF uemail != '' THEN
+                SET passConfirmed = TRUE;
+            END IF;
         END IF;
     END $$
 DELIMITER ;
