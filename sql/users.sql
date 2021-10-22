@@ -41,7 +41,7 @@ DROP PROCEDURE IF EXISTS sp_register;
 
 -- Create a procedure for user registration
 -- Code can be called like so:
--- CALL sp_register('comp440_sabra', true, 'Sabra', 'Bilodeau', 'sabra.bilodeau.352@my.csun.edu', @registered, @message);
+-- CALL sp_register('comp440_sabra', 'pass1234', true, 'Sabra', 'Bilodeau', 'sabra.bilodeau.352@my.csun.edu', @registered, @message);
 -- SELECT @registered, @message;
 DELIMITER $$
 CREATE PROCEDURE sp_register( IN username varchar(255), IN password varchar(25), IN passConfirmed boolean, IN firstName varchar(255), IN lastName varchar(255), IN email varchar(255), OUT registered boolean, OUT message varchar(255))

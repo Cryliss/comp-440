@@ -44,7 +44,7 @@ DROP PROCEDURE IF EXISTS sp_register;
 -- CALL sp_register('comp440_sabra', true, 'Sabra', 'Bilodeau', 'sabra.bilodeau.352@my.csun.edu', @registered, @message);
 -- SELECT @registered, @message;
 DELIMITER $$
-CREATE PROCEDURE sp_register( IN username varchar(255), IN passConfirmed boolean, IN firstName varchar(255), IN lastName varchar(255), IN email varchar(255), OUT registered boolean, OUT message varchar(255))
+CREATE PROCEDURE sp_register( IN username varchar(255), IN password varchar(255), IN passConfirmed boolean, IN firstName varchar(255), IN lastName varchar(255), IN email varchar(255), OUT registered boolean, OUT message varchar(255))
 BEGIN
     DECLARE usr, eml varchar(255) DEFAULT '';
 

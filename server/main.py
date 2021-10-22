@@ -48,21 +48,19 @@ def add():
                 return response
 
             if _passconfirmed != True:
-                # Check Payload returned true, so we have malicious values in our data
-                # Return status code 418: I'm a teapot.
-                # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
+                # The password was not confirmed prior to being sent to us?
+                # Return status code 400: Bad Request
                 rejected = True
                 message = {
                     'status': 400,
-                    'message': 'Pass was not confirmed',
+                    'message': 'Password was not confirmed',
                 }
                 response = jsonify(message)
                 response.status_code = 400
                 return response
 
             # Create the SQL query
-            sqlQuery = 'CALL sp_register(%s, %s, %s, %s %s, %s, @registered, @message)'
-            #sqlQuery = "INSERT INTO user (username, password, firstName, lastName, email) VALUES (%s, %s, %s, %s, %s)"
+            sqlQuery = 'CALL sp_register(%s, %s, %s, %s, %s, %s, @registered, @message)'
             bindData = (_username, _password, _passconfirmed, _firstname, _lastname, _email)
 
             # Make a new connection to the MySQL server
@@ -73,9 +71,11 @@ def add():
             cursor.execute(sqlQuery, bindData)
             conn.commit()
 
+            # Get the updated variables from the procedure and check them
             cursor.execute('SELECT @registered, @message')
-            data = cursor.fetchall()
+            data = cursor.fetchall()    # data = ((0, 'Username already exists!'),)
 
+            # First value is registered
             if data[0][0] == False:
                 # We didn't actually register the user when we called sp_register
                 # So let's return the reason message to the client
@@ -89,7 +89,7 @@ def add():
                 response.status_code = 409
                 return response
 
-            # Create a new message object to let the client know what happened
+            # Okay so we didn't have any issues, so let's let the client know
             message = {
                 'status': 200,
                 'message': 'User added successfully!',
@@ -99,7 +99,7 @@ def add():
             response = jsonify(message)
             response.status_code = 200
 
-            # return the status to the client
+            # Return the status to the client
             return response
         else:
             # Hm, we didn't get anything in our payload, return 404
@@ -126,7 +126,7 @@ def users():
         # Select all but sensitive data (password) from the database
 		cursor.execute("SELECT username, email, firstName, lastName FROM user")
 
-        # Get all rows retrieved, add them to the response and return 
+        # Get all rows retrieved, add them to the response and return
 		userRows = cursor.fetchall()
 		response = jsonify(userRows)
 		response.status_code = 200
@@ -186,6 +186,7 @@ def user(username):
         response = jsonify(message)
         response.status_code = 418
         return response
+
     try:
         # Make a new connection to the MySQL server
         conn = mysql.connect()
@@ -214,30 +215,30 @@ def user(username):
 
 # Delete a user from the table
 @app.route('/api/delete/<string:username>')
-def delete_emp(username):
+def delete(username):
     rejected = False
-
-    # First, let's make sure our payload doesn't contain anything malicious
-    if check_payload(username):
-        # Check Payload returned true, so we have malicious values in our data
-        # Return status code 418: I'm a teapot.
-        # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
-        rejected = True
-        message = {
-            'status': 418,
-            'message': 'Go away',
-        }
-        response = jsonify(message)
-        response.status_code = 418
-        return response
-
+    response = ''
     try:
+        # First, let's make sure our payload doesn't contain anything malicious
+        if check_payload(username):
+            # Check Payload returned true, so we have malicious values in our data
+            # Return status code 418: I'm a teapot.
+            # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
+            rejected = True
+            message = {
+                'status': 418,
+                'message': 'Go away',
+            }
+            response = jsonify(message)
+            response.status_code = 418
+            return response
+
         # Make a new connection to the MySQL server
         conn = mysql.connect()
         cursor = conn.cursor()
 
         # Create the SQL query
-        sqlQuery = 'DELETE FROM user WHERE username=$s'
+        sqlQuery = 'DELETE FROM user WHERE username=%s'
         bindData = (username,)
 
         # Execute the query and commit the changes
@@ -394,4 +395,4 @@ def not_found(error=None):
     return response
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port='8080', debug=True)
+    app.run(host='127.0.0.1', port='5555', debug=True)
