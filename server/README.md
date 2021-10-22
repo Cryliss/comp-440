@@ -5,7 +5,8 @@ Current functioning API calls are as follows:
 
 `http://127.0.0.1:8080/api/initializedb`
 
-Initializes the database User table.  
+Initializes the database Random table -- No longer the user table.  
+This allows us to keep the procedures defined in users.sql  
 Response should be: `Database successfully initialized!`
 
 `http://127.0.0.1:8080/api/add`
@@ -18,7 +19,8 @@ Request data should include
   "firstName": "Test",
   "lastName": "User",
   "email": "test.user.1@my.csun.edu",
-  "passConfirmed": true
+  "passConfirmed": true,
+  "password": "pass1234"
 }
 ```
 
