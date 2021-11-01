@@ -18,7 +18,7 @@ def add():
     # Rejected is to check whether or not we rejected the payload, so that
     # when we get to the 'finally' portion of our try, we don't attempt to
     # close the cursor or conn as we never created them in the first place
-    rejected = False
+    rejected = True
     try:
         # Read the payload data from the request and save the values we need
         # Usually a javascript object sent with the fetch call
@@ -59,6 +59,7 @@ def add():
                 response.status_code = 400
                 return response
 
+            rejected = False
             # Create the SQL query
             sqlQuery = 'CALL sp_register(%s, %s, %s, %s, %s, %s, @registered, @message)'
             bindData = (_username, _password, _passconfirmed, _firstname, _lastname, _email)
@@ -118,39 +119,47 @@ def add():
 # Define a route to list all registered users.
 @app.route('/api/users')
 def users():
-	try:
-        # Make a new connection to the MySQL server
-		conn = mysql.connect()
-		cursor = conn.cursor(pymysql.cursors.DictCursor)
-
-        # Select all but sensitive data (password) from the database
-		cursor.execute("SELECT username, email, firstName, lastName FROM user")
-
-        # Get all rows retrieved, add them to the response and return
-		userRows = cursor.fetchall()
-		response = jsonify(userRows)
-		response.status_code = 200
-		return response
-	except Exception as e:
-        # Was there some error in our code above?
-        # Print it out to the terminal so we can try and debug it
-		print(e)
-	finally:
-        # If we've made it here, then we successfully executed our try
-        # Now we can close our cursor and connection
-		cursor.close()
-		conn.close()
-
-# Define a route to get data from our random table
-@app.route('/api/random')
-def random():
+    rejected = True
+    response = ''
     try:
+        rejected == False
         # Make a new connection to the MySQL server
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
 
-        # Select name and email from the random table
-        cursor.execute('SELECT name, email FROM random')
+        # Select all but sensitive data (password) from the database
+        cursor.execute("SELECT username, email, firstName, lastName FROM user")
+
+        # Get all rows retrieved, add them to the response and return
+        userRows = cursor.fetchall()
+        response = jsonify(userRows)
+        response.status_code = 200
+        return response
+    except Exception as e:
+        # Was there some error in our code above?
+        # Print it out to the terminal so we can try and debug it
+        print(e)
+    finally:
+        if rejected == False:
+            # If we've made it here, then we successfully executed our try
+            # Now we can close our cursor and connection
+            cursor.close()
+            conn.close()
+
+# Define a route to get data from our random table
+@app.route('/api/advisor')
+def random():
+    rejected = True
+    response = ''
+    try:
+        rejected = False
+
+        # Make a new connection to the MySQL server
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+
+        # Select name and email from the advisor table
+        cursor.execute('SELECT * FROM advisor')
 
         # Add that data to the response and return
         randomRows = cursor.fetchall()
@@ -162,16 +171,16 @@ def random():
         # Print it out to the terminal so we can try and debug it
         print(e)
     finally:
-        # If we've made it here, then we successfully executed our try
-        # Now we can close our cursor and connection
-        cursor.close()
-        conn.close()
+        if rejected == False:
+            # If we've made it here, then we successfully executed our try
+            # Now we can close our cursor and connection
+            cursor.close()
+            conn.close()
 
 # Get data about a specific user
-# TODO: SQL INJECTION / SECURITY PROTECTIONS
 @app.route('/api/user/<string:username>')
 def user(username):
-    rejected = False
+    rejected = True
 
     # First, let's make sure our payload doesn't contain anything malicious
     if check_payload(username):
@@ -188,6 +197,7 @@ def user(username):
         return response
 
     try:
+        rejected = False
         # Make a new connection to the MySQL server
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
@@ -216,7 +226,7 @@ def user(username):
 # Delete a user from the table
 @app.route('/api/delete/<string:username>')
 def delete(username):
-    rejected = False
+    rejected = True
     response = ''
     try:
         # First, let's make sure our payload doesn't contain anything malicious
@@ -232,6 +242,8 @@ def delete(username):
             response = jsonify(message)
             response.status_code = 418
             return response
+
+        rejected = False
 
         # Make a new connection to the MySQL server
         conn = mysql.connect()
@@ -267,16 +279,76 @@ def delete(username):
 # Initializes a new database - to be used when create databse button is clicked
 @app.route('/api/initializedb')
 def initializedb():
+    rejected = True
+    response = ''
     try:
         # Make a new connection to the MySQL server
         conn = mysql.connect()
         cursor = conn.cursor()
 
-        # We are initializing a new table, 'random', not 'user', so the
-        # procedures declared in the users SQL file won't be dropped
-        # We're going to open the file with the SQL code to create the random table
-        # and execute each line found in it
-        for line in open("/Users/sabra/go/src/comp-440/sql/createdb.sql"):
+        rejected = False
+
+        # We are going to re-initialize all the tables except for our users table
+        # by using the university-1.sql file, provided by the professor.
+        # In order to use this file properly, we need to make sure we don't accidently
+        # try to execute lines of code that are just comments, or multiples line long
+        # as this will cause an error. The following for loop handles the processing
+        # of the file.
+
+        # sql will hold the SQL statement for when we see 'CREATE', as that's usually
+        # for 'CREATE TABLE' which always has new lines in it, so we need to add
+        # the lines following this to sql, so we can get one string for the full
+        # create satement.
+        sql = ''
+
+        # waiting is if we are waiting to see a ';' to indicate the statement end.
+        waiting = False
+        for line in open("/Users/sabra/go/src/comp-440/sql/university-1.sql"):
+            # Strip the line of the new line character, '\n'
+            line = line.strip()
+
+            # Is this just an empty line?
+            if line == '':
+                # Yep, move on.
+                continue
+            elif line[0] == '-' or line[0] == '/':
+                # We have a comment here, move on
+                continue
+            elif line[len(line)-1] == ';' and waiting:
+                # We've been waiting for the end of statement character, ';'
+                # and now we've found it
+                waiting = False         # Set waiting to false
+                sql = sql + line        # Add the last line to the statement
+                #print(sql)              # Output the statement to the terminal
+                cursor.execute(sql)     # Execute the statement
+                sql = ''                # Reset our sql variable
+                continue                # Move on with the for loop
+            elif len(line) > 6:
+                # Is the length of the line > 6 (since we want to check up to index 5)?
+                if line[0] == 'C' and line[1] == 'R' and line[2] == 'E' and line[3] == 'A' and line[4] == 'T' and line[5] == 'E':
+                    # Yep, did the first 5 char spell create? Yep!
+                    # We're making a new table then
+                    waiting = True      # Set waiting to true.
+                    sql = sql + line    # Add the line to the sql variable
+                    continue            # Move on with the for loop
+                elif waiting:
+                    # The length is indeed longer, but we're not a create statement
+                    # and we are waiting to be executed
+                    sql = sql + line    # Add the line to the sql variable
+                    continue            # Move on with the for loop
+                else:
+                    # The length is indeed longer, but we're not waiting either
+                    # Print and execute the command and continue on
+                    #print(line)
+                    cursor.execute(line)
+                    continue
+            elif waiting:
+                # None of the above are true, but we're waiting
+                sql = sql + line        # Add the line to the sql variable
+                continue                # Move on with the for loop
+            # Nothing above was true, and we're not waiting for an ';'
+            # Print the command and execute it.
+            #print(line)
             cursor.execute(line)
 
         # Create our response to the client and return it
@@ -292,16 +364,17 @@ def initializedb():
         # Print it out to the terminal so we can try and debug it
         print(e)
     finally:
-        # If we've made it here, then we successfully executed out try
-        # Now we can close our cursor and connection
-        cursor.close()
-        conn.close()
+        if rejected == False:
+            # If we've made it here, then we successfully executed out try
+            # Now we can close our cursor and connection
+            cursor.close()
+            conn.close()
 
 # Route for logging in?
 @app.route('/api/login', methods=["GET", "POST"])
 def login():
     response = ''
-    rejected = False
+    rejected = True
     try:
         # Read the payload data from the request and save the values we need
         # Usually a javascript object sent with the fetch call
@@ -325,8 +398,9 @@ def login():
                 response.status_code = 418
                 return response
 
+            rejected = False
             # Our payload was fine, let's create a new SQL query with it then
-            sqlQuery = 'CALL sp_login(%s, %s, @userConfirmed, @passConfirmed)'
+            sqlQuery = "CALL sp_login('%s', '%s', @userConfirmed, @passConfirmed)"
             bindData = (_username, _password)
 
             # Make a new connection to the MySQL server
