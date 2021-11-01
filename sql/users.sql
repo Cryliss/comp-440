@@ -102,13 +102,15 @@ DELIMITER $$
 CREATE PROCEDURE sp_login( IN username varchar(255), IN password varchar(255), OUT userConfirmed BOOLEAN, OUT passConfirmed BOOLEAN )
     BEGIN
         DECLARE uemail varchar(255) DEFAULT '';
+        DECLARE us varchar(255) DEFAULT '';
         SET passConfirmed = FALSE;
         SET userConfirmed = FALSE;
+
         SELECT email INTO uemail FROM user u WHERE u.username=username;
         IF uemail != '' THEN
             SET userConfirmed = TRUE;
-            SELECT email INTO uemail FROM user u WHERE u.username=username AND u.password=password;
-            IF uemail != '' THEN
+            SELECT username INTO us FROM user u WHERE u.email=uemail AND u.password=password;
+            IF us != '' THEN
                 SET passConfirmed = TRUE;
             END IF;
         END IF;

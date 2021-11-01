@@ -400,7 +400,7 @@ def login():
 
             rejected = False
             # Our payload was fine, let's create a new SQL query with it then
-            sqlQuery = "CALL sp_login('%s', '%s', @userConfirmed, @passConfirmed)"
+            sqlQuery = 'CALL sp_login(%s, %s, @userConfirmed, @passConfirmed)'
             bindData = (_username, _password)
 
             # Make a new connection to the MySQL server
