@@ -1,8 +1,8 @@
 -- Before you execute this code, you need to create the database first
 -- Here are the commands you need to run to create the database & run this file:
 
--- CREATE DATABASE users;
--- USE users;
+-- CREATE DATABASE university;
+-- USE university;
 -- SOURCE /Users/sabra/go/src/comp-440/users.sql;
 
 -- 1. Create a database schema
@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS user;
 -- Create new user table
 CREATE TABLE user (
     username    varchar(255) NOT NULL,
-    password    varchar(25) NOT NULL DEFAULT 'pass1234',
+    password    varchar(25) NOT NULL,
     firstName   varchar(255) NOT NULL,
     lastName    varchar(255) NOT NULL,
     email       varchar(255) NOT NULL
