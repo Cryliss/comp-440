@@ -10,6 +10,16 @@ Shawn Morrison
 
 # INSTRUCTIONS FOR LOCAL HOSTING
 
+ON YOUR COMPUTER, YOU MUST HAVE A MYSQL SERVER SETUP IN THE FOLLOWING MANNER:
+
+```sql
+CREATE USER comp440 IDENTIFIED BY 'pass1234';
+
+CREATE DATABASE university;
+USE university;
+SOURCE /path/to/your/users.sql;
+```
+
 ## MAC -- TERMINAL
 1. Create an isolated Python environment in a directory external to your project and activate it:
 
@@ -25,15 +35,17 @@ Shawn Morrison
   pip install -r requirements.txt
   ```
 
-3. Edit `config.py` to include your MYSQL database login information.
+3. Edit `config.py` to include your MYSQL database login information. [Already set up for comp440, pass1234 so if that's your login, you're fine.]
 
-4. Run the application:
+4. Edit `main.py` line# **305**. Edit it to include the filepath for your `university-1.sql` file.
+
+5. Run the application:
 
   ```bash
   python3 main.py
   ```
 
-5. In your web browser, enter the following address:
+6. In your web browser, enter the following address:
 
   ```bash
   http://127.0.0.1:8080
@@ -60,15 +72,17 @@ Shawn Morrison
   pip install -r requirements.txt
   ```
 
-5. Edit `config.py` to include your MYSQL database login information.
+5. Edit `config.py` to include your MYSQL database login information. [Already set up for comp440, pass1234 so if that's your login, you're fine.]
 
-6. Run the application:
+6. Edit `main.py` line# **305**. Edit it to include the filepath for your `university-1.sql` file.
+
+7. Run the application:
 
   ```bash
   python3 main.py
   ```
 
-7. In your web browser, enter the following address:
+8. In your web browser, enter the following address:
 
   ```bash
   http://127.0.0.1:8080
