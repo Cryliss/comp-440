@@ -95,16 +95,34 @@ function onclick(e) {
     e.preventDefault();
 
     //add if statement to see if username and password exist
-    formLogIn.classList.add("form--hidden");
-    formCreateDatabase.classList.remove("form--hidden");
-
-    // data = {
-    //     username: userNameLogIn,
-    //     password: passwordLogIn
-    //   }
+    data = {
+        username: userNameLogIn.value,
+        password: passwordLogIn.value
+    }
+    req = {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }
     //   response = postData('http://127.0.0.1:5555/api/login', data);
+    console.log(req)
 
+    fetch('http://127.0.0.1:5555/api/login', req).then(response => response.text())
+        .then((body) => {
+            status = body.status;
+            msg = body.message;
 
+            if status != 200 {
+                console.log(msg)
+                return 
+            }
+            formLogIn.classList.add("form--hidden");
+            formCreateDatabase.classList.remove("form--hidden");
+        }
+    );
 }
 
 //when the create database button is clicked on create data base page
