@@ -110,10 +110,10 @@ function onclick(e) {
     //   response = postData('http://127.0.0.1:5555/api/login', data);
     console.log(req)
 
-    fetch('http://127.0.0.1:5555/api/login', req).then(response => response.text())
+    fetch('http://127.0.0.1:5555/api/login', req).then(response => response.json())
         .then((body) => {
             console.log(body);
-            console.log(body["status"]);
+            console.log(body.status);
 
             if (body.status === 200) {
                 formLogIn.classList.add("form--hidden");
