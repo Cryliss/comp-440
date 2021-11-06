@@ -1,33 +1,3 @@
-async function getData(url = '', data = {}) {
-    const response = await fetch(url, {
-      method: 'GET', 
-      mode: 'cors', 
-      cache: 'no-cache', 
-      credentials: 'same-origin',
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer'
-    });
-    return response.json(); 
-  }
-  
-  async function postData(url = '', data = {}) {
-    const response = await fetch(url, {
-      method: 'POST', 
-      mode: 'cors', 
-      cache: 'no-cache', 
-      credentials: 'same-origin', 
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow', 
-      referrerPolicy: 'no-referrer', 
-      body: JSON.stringify(data) 
-    });
-    return response.json(); 
-  }
-
-
-
 //login
 const formLogIn = document.querySelector('#formLogIn');
 const userNameLogIn = document.querySelector('#userNameLogIn');
@@ -81,7 +51,7 @@ function onSubmit(e) {
         msgCreateAccount.classList.add('error') //makes msg field red by calling 'error' class from CSS file
         msgCreateAccount.innerHTML = 'Please enter all fields' //changes the empty msg to have a warning sign
 
-    // } 
+    // }
     // if(emailInput.value.includes('@') === false){
     //     msg.classList.add('error') //makes msg field red by calling 'error' class from CSS file
     //     msg.innerHTML = 'Please enter valid email address' //changes the empty msg to have a warning sign
@@ -114,16 +84,16 @@ function onSubmit(e) {
         //   response = postData('http:127.0.0.1:5555/api/add', data);
 
     }
-   
+
 }
 
 
 //when submit is pressed on the log in page
 formLogIn.addEventListener('submit', onclick); //listens for the submit button
 
-function onclick(e) { 
+function onclick(e) {
     e.preventDefault();
-    
+
     //add if statement to see if username and password exist
     formLogIn.classList.add("form--hidden");
     formCreateDatabase.classList.remove("form--hidden");
@@ -140,13 +110,16 @@ function onclick(e) {
 //when the create database button is clicked on create data base page
 // formCreateDatabase.addEventListener('button', databaseFunc); //listens for the submit button
 
-// function databaseFunc(e) { 
+// function databaseFunc(e) {
 //     e.preventDefault();
 //     console.log("database created");
 // }
 
 document.getElementById("createDatabaseButton").addEventListener("click", function(e) {
-    e.preventDefault
-    response = getData('http://127.0.0.1:5555/api/initializedb');
-    console.log("Database Created");
+    e.preventDefault();
+
+    fetch('http://127.0.0.1:5555/api/initializedb').then(response => response.text())
+        .then((body) => {
+            console.log(body);
+    });
 });
