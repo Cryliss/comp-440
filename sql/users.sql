@@ -17,11 +17,11 @@ DROP TABLE IF EXISTS user;
 
 -- Create new user table
 CREATE TABLE user (
-    username    varchar(255) NOT NULL,
-    password    varchar(25) NOT NULL,
-    firstName   varchar(255) NOT NULL,
-    lastName    varchar(255) NOT NULL,
-    email       varchar(255) NOT NULL
+    username    varchar(45) NOT NULL,
+    password    varchar(45) NOT NULL,
+    firstName   varchar(45) NOT NULL,
+    lastName    varchar(45) NOT NULL,
+    email       varchar(100) NOT NULL
 );
 
 -- Add a unique constraint on the email
@@ -44,10 +44,10 @@ DROP PROCEDURE IF EXISTS sp_register;
 -- CALL sp_register('comp440_sabra', 'pass1234', true, 'Sabra', 'Bilodeau', 'sabra.bilodeau.352@my.csun.edu', @registered, @message);
 -- SELECT @registered, @message;
 DELIMITER $$
-CREATE PROCEDURE sp_register( IN username varchar(255), IN password varchar(25), IN passConfirmed boolean, IN firstName varchar(255), IN lastName varchar(255), IN email varchar(255), OUT registered boolean, OUT message varchar(255))
+CREATE PROCEDURE sp_register( IN username varchar(100), IN password varchar(45), IN passConfirmed boolean, IN firstName varchar(45), IN lastName varchar(45), IN email varchar(45), OUT registered boolean, OUT message varchar(255))
 BEGIN
-    DECLARE usr, eml varchar(255) DEFAULT '';
-
+    DECLARE usr varchar(45) DEFAULT '';
+    DECLARE eml varchar(100) DEFAULT '';
     -- Has the password been confirmed?
     IF !passConfirmed THEN
         SET registered = FALSE;
@@ -99,10 +99,10 @@ DROP PROCEDURE IF EXISTS sp_login;
 -- CALL sp_login('comp440_sabra', 'pass1234', @passConfirmed);
 -- SELECT @passConfirmed;
 DELIMITER $$
-CREATE PROCEDURE sp_login( IN username varchar(255), IN password varchar(255), OUT userConfirmed BOOLEAN, OUT passConfirmed BOOLEAN )
+CREATE PROCEDURE sp_login( IN username varchar(45), IN password varchar(45), OUT userConfirmed BOOLEAN, OUT passConfirmed BOOLEAN )
     BEGIN
-        DECLARE uemail varchar(255) DEFAULT '';
-        DECLARE us varchar(255) DEFAULT '';
+        DECLARE uemail varchar(100) DEFAULT '';
+        DECLARE us varchar(45) DEFAULT '';
         SET passConfirmed = FALSE;
         SET userConfirmed = FALSE;
 
