@@ -57,35 +57,47 @@ function onSubmit(e) {
     //     msg.innerHTML = 'Please enter valid email address' //changes the empty msg to have a warning sign
 
     //     setTimeout(() => msg.remove(), 3000)
-    } else {
-        usernameInputTemp = usernameInput.value;
-        passwordInputTemp = passwordInput.value;
-        passwordConfirmedInputTemp = passwordConfirmedInput.value;
-        firstNameInputTemp = firstNameInput.value;
-        lastNameInputTemp = lastNameInput.value;
-        emailInputTemp = emailInput.value;
-        usernameInput.value = '';
-        passwordInput.value = '';
-        passwordConfirmedInput.value = '';
-        firstNameInput.value = '';
-        lastNameInput.value = '';
-        emailInput.value = '';
-        formLogIn.classList.remove("form--hidden");
-        formCreateAccount.classList.add("form--hidden");
+} else if (passwordInput.value != passwordConfirmedInput.value) {
+    console.log('booo');
+} else {
+        data = {
+             username: usernameInput.value,
+             firstName: firstNameInput.value,
+             lastName: lastNameInput.value,
+             email: emailInput.value,
+             passConfirmed: true,
+             password: passwordInput.value
+        }
+        req = {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
+        console.log(req)
 
-        // data = {
-        //     username: usernameInputTemp,
-        //     firstName: firstNameInputTemp,
-        //     lastName: lastNameInputTemp,
-        //     email: emailInputTemp,
-        //     passConfirmed: true,
-        //     password: passwordInputTemp
-        //   }
-        //   response = postData('http:127.0.0.1:5555/api/add', data);
+        fetch('http://127.0.0.1:5555/api/add', req).then(response => response.json())
+            .then((body) => {
+                console.log(body);
+                console.log(body.status);
 
+                if (body.status === 200) {
+                    usernameInput.value = '';
+                    passwordInput.value = '';
+                    passwordConfirmedInput.value = '';
+                    firstNameInput.value = '';
+                    lastNameInput.value = '';
+                    emailInput.value = '';
+
+                    formLogIn.classList.remove("form--hidden");
+                    formCreateAccount.classList.add("form--hidden");
+                }
+        });
     }
-
 }
+
 
 
 //when submit is pressed on the log in page
@@ -95,11 +107,11 @@ function onclick(e) {
     e.preventDefault();
 
     //add if statement to see if username and password exist
-    data = {
+    let data = {
         username: userNameLogIn.value,
         password: passwordLogIn.value
     }
-    req = {
+    let req = {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -120,8 +132,6 @@ function onclick(e) {
                 formCreateDatabase.classList.remove("form--hidden");
             }
     });
-
-
 }
 
 //when the create database button is clicked on create data base page
