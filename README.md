@@ -48,7 +48,7 @@ SOURCE /path/to/your/users.sql;
 6. In your web browser, enter the following address:
 
   ```bash
-  http://127.0.0.1:8080
+  http://127.0.0.1:5555
   ```
 
 ## PC -- COMMAND LINE
