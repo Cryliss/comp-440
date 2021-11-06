@@ -1,0 +1,101 @@
+!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>JS For Beginners</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+      <h1>Comp440</h1>
+    </header>
+
+    <section class="container"> <!–– pushes everything to the middle––>
+
+
+
+
+
+
+      <form class = "form" id="formLogIn"> <!–– the background for the log in ––>
+        <h1>Log In</h1>
+        <div class="msg"></div>
+
+        <div>
+          <label for="userName">Username:</label> <!–– input for name ––>
+          <input type="text" id="userNameLogIn">
+        </div>
+        <div>
+          <label for="password">Password:</label> <!–– input for email ––>
+          <input type="text" id="passwordLogIn">
+        </div>
+
+        <p class="form__text">
+          <a class="form__link" href="./" id="linkCreateAccount">Don't have an account? Create account</a>
+      </p>
+
+
+        <input class="btn" type="submit" value="Submit"> <!–– input submit button ––>
+      </form>
+
+
+
+
+
+
+
+
+      <form class = "form form--hidden" id="formCreateAccount"> <!–– the background for the log in ––>
+        <h1>Register</h1>
+        <div class="msgCreateAccount"></div>
+
+        <div>
+          <label for="userName">Username:</label> <!–– input for name ––>
+          <input type="text" id="userName">
+        </div>
+        <div>
+          <label for="password">Password:</label> <!–– input for email ––>
+          <input type="text" id="password">
+        </div>
+        <div>
+            <label for="passwordConfirmed">Confirm Password:</label> <!–– input for name ––>
+            <input type="text" id="passwordConfirmed">
+          </div>
+          <div>
+            <label for="firstName">First Name:</label> <!–– input for name ––>
+            <input type="text" id="firstName">
+          </div>
+          <div>
+            <label for="lastName">Last Name:</label> <!–– input for name ––>
+            <input type="text" id="lastName">
+          </div>
+          <div>
+            <label for="email">Email:</label> <!–– input for name ––>
+            <input type="text" id="email">
+          </div>
+
+          <p class="form__text">
+            <a class="form__link" href="./" id="linkLogin">Already have an account? Sign in</a>
+        </p>
+        <input class="btn" type="submit" value="Submit"> <!–– input submit button ––>
+      </form>
+
+
+      <form class = "form form--hidden" id="formCreateDatabase"> <!–– the background for the log in ––>
+        <h1>Create Your Database</h1>
+        <div class="msg"></div>
+
+
+
+        <input class="btn" id = "createDatabaseButton" type="button" value="Create Database"> <!–– input submit button ––>
+      </form>
+
+      
+    </section>
+    
+
+    <script src="main.js"></script>
+  </body>
+</html>
