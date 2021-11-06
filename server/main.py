@@ -418,7 +418,7 @@ def login():
                 # Username was not confirmed! Don't let them log in
                 message = {
                     'status': 409,
-                    'message': 'Invalid username given',
+                    'message': 'Username given does not exist!',
                 }
                 response = jsonify(message)
                 response.status_code = 409
