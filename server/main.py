@@ -190,7 +190,7 @@ def user(username):
         rejected = True
         message = {
             'status': 418,
-            'message': 'Go away',
+            'message': "I'm a teapot. Go away",
         }
         response = jsonify(message)
         response.status_code = 418
@@ -392,7 +392,7 @@ def login():
                 rejected = True
                 message = {
                     'status': 418,
-                    'message': 'Im a teapot. Go away',
+                    'message': "I'm a teapot. Go away",
                 }
                 response = jsonify(message)
                 response.status_code = 418
@@ -418,7 +418,7 @@ def login():
                 # Username was not confirmed! Don't let them log in
                 message = {
                     'status': 409,
-                    'message': 'Username given does not exist!',
+                    'message': 'Username does not exist!',
                 }
                 response = jsonify(message)
                 response.status_code = 409
