@@ -112,17 +112,16 @@ function onclick(e) {
 
     fetch('http://127.0.0.1:5555/api/login', req).then(response => response.text())
         .then((body) => {
-            status = body.status;
-            msg = body.message;
+            console.log(body);
+            console.log(body["status"]);
 
-            if status != 200 {
-                console.log(msg)
-                return 
+            if (body.status === 200) {
+                formLogIn.classList.add("form--hidden");
+                formCreateDatabase.classList.remove("form--hidden");
             }
-            formLogIn.classList.add("form--hidden");
-            formCreateDatabase.classList.remove("form--hidden");
-        }
-    );
+    });
+
+
 }
 
 //when the create database button is clicked on create data base page
