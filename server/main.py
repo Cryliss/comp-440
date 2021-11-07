@@ -21,10 +21,16 @@ def home():
 
 @app.route('/login.html')
 def login():
+    username = session.get('username')
+    if username != None:
+        return redirect('home.html', code=302)
     return render_template('login.html')
 
 @app.route('/register.html')
 def register():
+    username = session.get('username')
+    if username != None:
+        return redirect('home.html', code=302)
     return render_template('register.html')
 
 # Let's create a route for our app that adds a user to our database
