@@ -3,7 +3,29 @@ from app import app
 from config import mysql
 from validation import check_payload
 from flask import jsonify
-from flask import flash, request
+from flask import flash, request, session, redirect, render_template
+
+@app.route('/')
+def index():
+    username = session.get('username')
+    if username == None:
+        return redirect('login.html', code=302)
+    return render_template('home.html')
+
+@app.route('/home.html')
+def home():
+    username = session.get('username')
+    if username == None:
+        return redirect('login.html', code=302)
+    return render_template('home.html')
+
+@app.route('/login.html')
+def login():
+    return render_template('login.html')
+
+@app.route('/register.html')
+def register():
+    return render_template('register.html')
 
 # Let's create a route for our app that adds a user to our database
 # We can get it by using a url like:
@@ -75,6 +97,7 @@ def add():
             # Get the updated variables from the procedure and check them
             cursor.execute('SELECT @registered, @message')
             data = cursor.fetchall()    # data = ((0, 'Username already exists!'),)
+            print(data)
 
             # First value is registered
             if data[0][0] == False:
@@ -372,7 +395,7 @@ def initializedb():
 
 # Route for logging in?
 @app.route('/api/login', methods=["GET", "POST"])
-def login():
+def loginUser():
     response = ''
     rejected = True
     try:
@@ -440,6 +463,7 @@ def login():
                 'status': 200,
                 'message': 'User successfully logged in',
             }
+            session['username'] = _username
             response = jsonify(message)
             response.status_code = 200
             return response

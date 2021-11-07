@@ -48,6 +48,9 @@ CREATE PROCEDURE sp_register( IN username varchar(100), IN password varchar(45),
 BEGIN
     DECLARE usr varchar(45) DEFAULT '';
     DECLARE eml varchar(100) DEFAULT '';
+    SET registered = FALSE;
+    SET message = '';
+
     -- Has the password been confirmed?
     IF !passConfirmed THEN
         SET registered = FALSE;
@@ -61,8 +64,8 @@ BEGIN
             SET message = 'Username already exists!';
         ELSE
             -- We do not! Do we already have a user with this email?
-            SELECT email INTO eml FROM user WHERE username=usr LIMIT 1;
-            IF email = eml THEN
+            SELECT email INTO eml FROM user u WHERE u.email=email LIMIT 1;
+            IF eml != '' THEN
                 -- Apparently we do .. lets set our out variables
                 SET registered = FALSE;
                 SET message = 'Email is already registered!';

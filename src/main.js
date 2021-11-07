@@ -4,7 +4,7 @@ const userNameLogIn = document.querySelector('#userNameLogIn');
 const passwordLogIn = document.querySelector('#passwordLogIn');
 
 //createAccount
-const formCreateAccount = document.querySelector('#formCreateAccount')
+const formCreateAccount = document.querySelector('#formCreateAccount');
 const usernameInput = document.querySelector('#userName');
 const passwordInput = document.querySelector('#password');
 const passwordConfirmedInput = document.querySelector('#passwordConfirmed');

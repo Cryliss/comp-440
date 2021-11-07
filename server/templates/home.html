@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>COMP440 DB</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</head>
+<body>
+    <header>
+        <h1>Comp440</h1>
+    </header>
+
+    <!-- pushes everything to the middle-->
+    <section class="container">
+
+        <!-- Create database form -->
+        <form class = "form" id="formCreateDatabase">
+            <h1>Create Your Database</h1>
+            <div class="msg" id="msg"></div>
+            <input class="btn" id="createDatabaseButton" type="button" value="Create Database"> <!-- input submit button -->
+        </form>
+    </section>
+</body>
+</html>

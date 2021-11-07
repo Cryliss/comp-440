@@ -9,4 +9,5 @@ app.config['MYSQL_DATABASE_USER'] = 'sabra'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'hA#&kfO5Zx8%'
 app.config['MYSQL_DATABASE_DB'] = 'university'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config['SECRET_KEY'] = 'supercalifragilisticexpialidocious'
 mysql.init_app(app)
