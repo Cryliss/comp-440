@@ -5,32 +5,50 @@ from validation import check_payload
 from flask import jsonify
 from flask import flash, request, session, redirect, render_template
 
+# Create routing to render the html files
+
+# General webpage route
 @app.route('/')
 def index():
+    # Is someone logged in?
     username = session.get('username')
     if username == None:
+        # Nope, redirect to the login screen
         return redirect('login.html', code=302)
-    return render_template('home.html')
+    # Yep, so let's redirect to our home template
+    return redirect('home.html', code=302)
 
+# Route for the home page
 @app.route('/home.html')
 def home():
+    # Is someone logged in?
     username = session.get('username')
     if username == None:
+        # Nope, redirect to the login screen
         return redirect('login.html', code=302)
+    # Yep, so let's render our home page
     return render_template('home.html')
 
+# Route for the login page
 @app.route('/login.html')
 def login():
+    # Is someone logged in?
     username = session.get('username')
     if username != None:
+        # Yep, so let's redirect them to the home screen
         return redirect('home.html', code=302)
+    # Nope, let's render the login template
     return render_template('login.html')
 
+# Route for the register page
 @app.route('/register.html')
 def register():
+    # Is someone logged in?
     username = session.get('username')
     if username != None:
+        # Yep, so let's redirect them to the home screen
         return redirect('home.html', code=302)
+    # Nope, so let's go ahead and render the register template 
     return render_template('register.html')
 
 # Let's create a route for our app that adds a user to our database
