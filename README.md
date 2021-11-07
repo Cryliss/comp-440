@@ -3,9 +3,19 @@
 Repository for COMP 440: Database Design Group Project
 
 ## Group Members
-Sabra Bilodeau  
-Faizan Hussain  
-Shawn Morrison  
+|   Member Name  |         Contribution          |
+| :------------: | :---------------------------- |
+| Sabra Bilodeau | Server & database connections |
+| Faizan Hussain | Front end |
+| Shawn Morrison | Front end |
+
+## Project Phases
+
+| Phase | Date Due | Demo Video |
+| :---: | :------: | :--------- |
+|   1   | 11/08/21 | [Demo]()   |
+|   2   | 11/22/21 | [Demo]()   |
+|   3   | 12/06/21 | [Demo]()   |
 
 
 # INSTRUCTIONS FOR LOCAL HOSTING
