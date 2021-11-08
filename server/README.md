@@ -1,101 +1,99 @@
-# server
+# comp-440
 
-## API Calls
-Current functioning API calls are as follows:
+Repository for COMP 440: Database Design Group Project
 
-`http://127.0.0.1:8080/api/initializedb`
+## Group Members
+|   Member Name  |  Contribution |
+| :------------: | :------------:|
+| Sabra Bilodeau | Back end      |
+| Faizan Hussain | Front end     |
+| Shawn Morrison | Front end     |
 
-Initializes the database Random table -- No longer the user table.  
-This allows us to keep the procedures defined in users.sql  
-Response should be: `Database successfully initialized!`
+## Project Phases
 
-`http://127.0.0.1:8080/api/add`
+| Phase | Date Due | Demo Video |
+| :---: | :------: | :--------- |
+|   1   | 11/08/21 | [Demo](https://youtu.be/YmP42iaXkLc) |
+|   2   | 11/22/21 | [Demo]()   |
+|   3   | 12/06/21 | [Demo]()   |
 
-This is a POST request - need to test it using https://reqbin.com/.  
-Request data should include  
-```json
-{
-  "username": "comp440_test",
-  "firstName": "Test",
-  "lastName": "User",
-  "email": "test.user.1@my.csun.edu",
-  "passConfirmed": true,
-  "password": "pass1234"
-}
+
+# INSTRUCTIONS FOR LOCAL HOSTING
+
+ON YOUR COMPUTER, YOU MUST HAVE A MYSQL SERVER SETUP IN THE FOLLOWING MANNER:
+
+```sql
+CREATE USER comp440 IDENTIFIED BY 'pass1234';
+
+CREATE DATABASE university;
+USE university;
+SOURCE /path/to/your/users.sql; -- /server/sql/users.sql
 ```
 
-Response data should be  
-```json
-{
-    "message": "User added successfully!",
-    "status": 200
-}
-```
+## MAC -- TERMINAL
+1. Create an isolated Python environment in a directory external to your project and activate it:
 
-`http://127.0.0.1:8080/api/users`  
+  ```bash
+  python3 -m venv env
+  source env/bin/activate
+  ```
 
-Response data should be  
-```json
-[
-  {
-    "email": "faizan.hussain.???@my.csun.edu",
-    "firstName": "Faizan",
-    "lastName": "Hussain",
-    "username": "comp440_faizan"
-  },
-  {
-    "email": "sabra.bilodeau.352@my.csun.edu",
-    "firstName": "Sabra",
-    "lastName": "Bilodeau",
-    "username": "comp440_sabra"
-  },
-  {
-    "email": "shawn.morrison.???@my.csun.edu",
-    "firstName": "Shawn",
-    "lastName": "Morrison",
-    "username": "comp440_shawn"
-  },
-  {
-    "email": "test.user.1@my.csun.edu",
-    "firstName": "Test",
-    "lastName": "User",
-    "username": "comp440_test"
-  }
-]
-```
+2. Navigate to your project directory `server` and install dependencies:
 
-`http://127.0.0.1:8080/api/user/comp440_test`  
+  ```bash
+  cd YOUR_PROJECT_PATH
+  pip install -r requirements.txt
+  ```
 
-Response data should be  
-```json
+3. Edit `config.py` to include your MYSQL database login information. [Already set up for comp440, pass1234 so if that's your login, you're fine.]
 
-{
-  "email": "test.user.1@my.csun.edu",
-  "firstName": "Test",
-  "lastName": "User",
-  "username": "comp440_test"
-}
-```
+4. Edit `main.py` line# **353**. Edit it to include the file path for your `university-1.sql` file.
 
-`http://127.0.0.1:8080/api/user/;%20DROP%20TABLE%20user;`  
-Tests SQL injection protection
+5. Run the application:
 
-Response should be  
-```json
-{
-  "message": "Im a teapot. Go away",
-  "status": 418
-}
-```
+  ```bash
+  python3 main.py
+  ```
 
-`http://127.0.0.1:8080/api/delete/comp440_test`
+6. In your web browser, enter the following address:
 
-Delete the test user you just created
+  ```bash
+  http://127.0.0.1:5555
+  ```
 
-Response data should be   
-```json
-{
-  "message": "Usercomp440_testdeleted successfully!",
-  "status": 200
-}
-```
+## PC -- COMMAND LINE
+### Use PowerShell to run your Python packages.
+
+1. Locate your installation of PowerShell.
+
+2. Right-click on the shortcut to PowerShell and start it as an administrator.
+
+3. Create an isolated Python environment in a directory external to your project and activate it:
+
+  ```bash
+  python -m venv env
+  env\Scripts\activate
+  ```
+
+4. Navigate to your project directory `server` and install dependencies:
+
+  ```bash
+  cd YOUR_PROJECT
+  pip install -r requirements.txt
+  ```
+
+5. Edit `config.py` to include your MYSQL database login information. [Already set up for comp440, pass1234 so if that's your login, you're fine.]
+
+6. Edit `main.py` line# **353**. Edit it to include the file path for your `university-1.sql` file.
+
+7. Run the application:
+
+  ```bash
+  python3 main.py
+  ```
+
+8. In your web browser, enter the following address:
+
+  ```bash
+  http://127.0.0.1:5555
+  ```

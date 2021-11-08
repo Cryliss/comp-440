@@ -48,7 +48,7 @@ def register():
     if username != None:
         # Yep, so let's redirect them to the home screen
         return redirect('home.html', code=302)
-    # Nope, so let's go ahead and render the register template 
+    # Nope, so let's go ahead and render the register template
     return render_template('register.html')
 
 # Let's create a route for our app that adds a user to our database
@@ -350,7 +350,7 @@ def initializedb():
 
         # waiting is if we are waiting to see a ';' to indicate the statement end.
         waiting = False
-        for line in open("/Users/sabra/go/src/comp-440/sql/university-1.sql"):
+        for line in open("/Users/sabra/go/src/comp-440/server/sql/university-1.sql"):
             # Strip the line of the new line character, '\n'
             line = line.strip()
 

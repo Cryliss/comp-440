@@ -3,17 +3,17 @@
 Repository for COMP 440: Database Design Group Project
 
 ## Group Members
-|   Member Name  |         Contribution          |
-| :------------: | :---------------------------- |
-| Sabra Bilodeau | Server & database connections |
-| Faizan Hussain | Front end |
-| Shawn Morrison | Front end |
+|   Member Name  |  Contribution |
+| :------------: | :------------:|
+| Sabra Bilodeau | Back end      |
+| Faizan Hussain | Front end     |
+| Shawn Morrison | Front end     |
 
 ## Project Phases
 
 | Phase | Date Due | Demo Video |
 | :---: | :------: | :--------- |
-|   1   | 11/08/21 | [Demo]()   |
+|   1   | 11/08/21 | [Demo](https://youtu.be/YmP42iaXkLc) |
 |   2   | 11/22/21 | [Demo]()   |
 |   3   | 12/06/21 | [Demo]()   |
 
@@ -27,7 +27,7 @@ CREATE USER comp440 IDENTIFIED BY 'pass1234';
 
 CREATE DATABASE university;
 USE university;
-SOURCE /path/to/your/users.sql;
+SOURCE /path/to/your/users.sql; -- /server/sql/users.sql
 ```
 
 ## MAC -- TERMINAL
@@ -38,7 +38,7 @@ SOURCE /path/to/your/users.sql;
   source env/bin/activate
   ```
 
-2. Navigate to your project directory and install dependencies:
+2. Navigate to your project directory `server` and install dependencies:
 
   ```bash
   cd YOUR_PROJECT_PATH
@@ -47,7 +47,7 @@ SOURCE /path/to/your/users.sql;
 
 3. Edit `config.py` to include your MYSQL database login information. [Already set up for comp440, pass1234 so if that's your login, you're fine.]
 
-4. Edit `main.py` line# **305**. Edit it to include the filepath for your `university-1.sql` file.
+4. Edit `main.py` line# **353**. Edit it to include the file path for your `university-1.sql` file.
 
 5. Run the application:
 
@@ -75,7 +75,7 @@ SOURCE /path/to/your/users.sql;
   env\Scripts\activate
   ```
 
-4. Navigate to your project directory and install dependencies:
+4. Navigate to your project directory `server` and install dependencies:
 
   ```bash
   cd YOUR_PROJECT
@@ -84,7 +84,7 @@ SOURCE /path/to/your/users.sql;
 
 5. Edit `config.py` to include your MYSQL database login information. [Already set up for comp440, pass1234 so if that's your login, you're fine.]
 
-6. Edit `main.py` line# **305**. Edit it to include the filepath for your `university-1.sql` file.
+6. Edit `main.py` line# **353**. Edit it to include the file path for your `university-1.sql` file.
 
 7. Run the application:
 

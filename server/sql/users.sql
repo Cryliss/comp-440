@@ -11,6 +11,8 @@
 -- email should be unique & username is the primary key
 
 -- Let's drop any previously created versions of user table
+USE `university`;
+
 DROP TABLE IF EXISTS user;
 
 -- Create new user table
