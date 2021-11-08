@@ -8,9 +8,7 @@
 -- 1. Create a database schema
 -- The schema of the user table should be:
 -- user(username, password, firstName, lastName, email)
--- email should be unique & username is the primary key <- Directly conflicts
--- with #3, saying each username should be comp440, so to address that
--- requirement i made our usernames comp440_firstname
+-- email should be unique & username is the primary key
 
 -- Let's drop any previously created versions of user table
 DROP TABLE IF EXISTS user;
@@ -25,8 +23,6 @@ CREATE TABLE user (
 );
 
 -- Add a unique constraint on the email
--- I initally thought email and username would be necesarry,
--- but if we all have 'comp440' as a username it doesn't matter
 ALTER TABLE user ADD CONSTRAINT unique_email UNIQUE (email);
 
 -- Make username our primary key
