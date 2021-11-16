@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>COMP440 DB Register</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='register.js') }}"></script>
+</head>
+<body>
+    <header>
+        <h1>Comp440</h1>
+    </header>
+
+    <!-- pushes everything to the middle -->
+    <section class="container">
+        <!-- Form page for creating an account -->
+        <form class="form" id="formCreateAccount">
+
+            <h1>Register</h1>
+            <div class="msgCreateAccount"></div>
+
+            <div>
+                <!-- input for username -->
+                <label for="userName">Username:</label>
+                <input type="text" id="userName">
+            </div>
+            <div>
+                <!-- input for password -->
+                <label for="password">Password:</label>
+                <input type="text" id="password">
+            </div>
+            <div>
+                <!-- input for password re-entry -->
+                <label for="passwordConfirmed">Confirm Password:</label>
+                <input type="text" id="passwordConfirmed">
+            </div>
+            <div>
+                <!-- input for first name -->
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName">
+            </div>
+            <div>
+                <!-- input for last name -->
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName">
+            </div>
+            <div>
+                <!-- input for email -->
+                <label for="email">Email:</label>
+                <input type="text" id="email">
+            </div>
+
+            <p class="form__text">
+                <a class="form__link" href="/login.html" id="linkLogin">Already have an account? Sign in</a>
+            </p>
+            <input class="btn" type="submit" value="Submit"> <!-- input submit button -->
+        </form>
+
+    </section>
+</body>
+</html>
