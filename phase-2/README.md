@@ -13,8 +13,6 @@ A user can follow a list of other users and can also be followed by another list
 # BLOGS
 User can
     - [x] Post a blog
-    - Modify the blog
-    - Delete the blog
 
 Constraints
     - [x] 2 blogs per day, per user
@@ -22,8 +20,6 @@ Constraints
 # Comments
 User can
     - [x] Comment on a blog, *that is not their own*
-    - Modify the comment
-    - Delete the comment
 
 Constraints
     - [x] 3 comments per day, per user
