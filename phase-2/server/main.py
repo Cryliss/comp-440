@@ -14,6 +14,7 @@ def index():
         return redirect('start.html', code=302)
     return render_template('home.html')
 
+# Route for logging out the user.
 @app.route('/logout')
 def logout():
     # Remove the username from the session if its there.
@@ -21,6 +22,7 @@ def logout():
     session.pop('initialized', None)
     return redirect('login.html', code=302)
 
+# Route for the home page
 @app.route('/home.html')
 def home():
     username = session.get('username')
@@ -28,6 +30,7 @@ def home():
         return redirect('login.html', code=302)
     return render_template('home.html')
 
+# Route for the login page
 @app.route('/login.html')
 def login():
     # Is someone logged in?
@@ -38,6 +41,7 @@ def login():
     # Nope, let's render the login template
     return render_template('login.html')
 
+# Route for the start page
 @app.route('/start.html')
 def start():
     username = session.get('username')
@@ -47,6 +51,7 @@ def start():
         return redirect('home.html', code=302)
     return render_template('start.html')
 
+# Route for the register page
 @app.route('/register.html')
 def register():
     # Is someone logged in?
@@ -144,6 +149,7 @@ def users():
         message = 'users: failed to retrieve all users. '+str(e)
         print(message)
 
+# Route for editing .. not tested lol
 @app.route('/api/blog/edit')
 def editblog():
     try:
@@ -281,7 +287,7 @@ def newcomment():
             bindData = (_sentiment, _description, _blogid, _poster)
 
             # Use updatedb function to perform procedure call
-            date = procedurecall(sqlQuery, bindData, 'SELECT @commentid, @message')
+            data = procedurecall(sqlQuery, bindData, 'SELECT @commentid, @message')
 
             if data[0][0] == -1:
                 message = {
@@ -293,6 +299,7 @@ def newcomment():
             message = {
                 "message": "Comment id: "+str(data[0][0])+" Db message: "+data[0][1],
                 "status": 200,
+                "commentid": data[0][0],
             }
             return create_response(message, 200)
         else:

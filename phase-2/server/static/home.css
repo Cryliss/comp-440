@@ -1,3 +1,6 @@
+/* Home HTML template & some css taken from:
+    https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_webpage&stacked=h 
+ */
 
 /* Remove the navbar's default margin-bottom and rounded borders */
 .navbar {
@@ -5,17 +8,25 @@
   border-radius: 0;
 }
 
+/* Set default fonts for the body of the page */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
 .col {
   margin: 2%;
 }
 
+/* Error messages for the user */
 .error {
-  background: orangered;
+  background: #f44336;
   color: #fff;
   padding: 5px;
   margin: 5px;
 }
 
+/* Success messages for the user */
 .success {
   background: forestgreen;
   text-align: center;

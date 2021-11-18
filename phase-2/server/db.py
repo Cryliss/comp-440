@@ -10,7 +10,6 @@ def updatedb(sqlQuery, bindData):
     cursor = conn.cursor()
     try:
         cursor.execute(charsetQuery)
-        conn.commit()
         cursor.execute(sqlQuery, bindData)
         conn.commit()
     except Exception as e:
@@ -27,10 +26,9 @@ def procedurecall(sqlQuery, bindData, procQuery):
     cursor = conn.cursor()
     try:
         cursor.execute(charsetQuery)
-        conn.commit()
         cursor.execute(sqlQuery, bindData)
-        conn.commit()
         cursor.execute(procQuery)
+        conn.commit()
         data = cursor.fetchall()
         print(data)
         return data
@@ -51,8 +49,11 @@ def queryalldb(sqlQuery, bindData):
         conn.commit()
         if bindData == None:
             cursor.execute(sqlQuery)
-        else:
-            cursor.execute(sqlQuery, bindData)
+            conn.commit()
+            data = cursor.fetchall()
+            return data
+        cursor.execute(sqlQuery, bindData)
+        conn.commit()
         data = cursor.fetchall()
         return data
     except Exception as e:
@@ -69,11 +70,13 @@ def queryonedb(sqlQuery, bindData):
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     try:
         cursor.execute(charsetQuery)
-        conn.commit()
         if bindData == None:
             cursor.execute(sqlQuery)
-        else:
-            cursor.execute(sqlQuery, bindData)
+            conn.commit()
+            data = cursor.fetchall()
+            return data
+        cursor.execute(sqlQuery, bindData)
+        conn.commit()
         data = cursor.fetchone()
         return data
     except Exception as e:
@@ -92,8 +95,11 @@ def querydb(sqlQuery, bindData):
         conn.commit()
         if bindData == None:
             cursor.execute(sqlQuery)
-        else:
-            cursor.execute(sqlQuery, bindData)
+            conn.commit()
+            data = cursor.fetchone()
+            return data
+        cursor.execute(sqlQuery, bindData)
+        conn.commit()
         data = cursor.fetchone()
         return data
     except Exception as e:

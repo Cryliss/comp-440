@@ -21,7 +21,7 @@ CREATE PROCEDURE sp_insertPost (
     OUT blogid int(10), OUT message varchar(250)
 )
     BEGIN
-        DECLARE tag varchar(20);
+        DECLARE tag varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
         DECLARE numPosts int(2) DEFAULT NULL;
         DECLARE bid int(10) DEFAULT NULL;
 
@@ -41,7 +41,7 @@ CREATE PROCEDURE sp_insertPost (
             IF bid IS NOT NULL THEN
                 SET blogid = bid;
                 SET message = 'Blog successfully added to the database.';
-                -- TODO: FIX THIS -- MAKES INSERT BREAK KINDA 
+                -- TODO: FIX THIS -- MAKES INSERT BREAK KINDA
                 WHILE tag != '' DO
                     SET tag = SUBSTRING_INDEX(tags, ',', 1);
                     START TRANSACTION;
@@ -73,7 +73,7 @@ CREATE PROCEDURE sp_comment(
     BEGIN
         DECLARE numComments int(2) DEFAULT NULL;
         DECLARE bid, cid int(10) DEFAULT NULL;
-        DECLARE usr varchar(45) DEFAULT NULL;
+        DECLARE usr varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL;
 
         SET commentid = -1;
 
