@@ -1,4 +1,5 @@
 # server
+**DOCUMENTATION IS OUTDATED**
 
 ## API Calls
 Current functioning API calls are as follows:
