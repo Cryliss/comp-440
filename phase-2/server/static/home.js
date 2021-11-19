@@ -323,10 +323,10 @@ function createNewCommentElement(blogid) {
     // Repeat above but for the negative sentiment
     let negNode = document.createElement("OPTION");
     let negText = document.createTextNode("negative");
-    negNode.appendChild(negText);       // Add text node to the option element
-    select.appendChild(negNode);        // Add the negative option to the select
-    sentiment.appendChild(select);      // Add the select to the sentiment div
-    form.appendChild(sentiment);        // Add the sentiment div to the form
+    negNode.appendChild(negText);                  // Add text node to the option element
+    select.appendChild(negNode);                   // Add the negative option to the select
+    sentiment.appendChild(select);                 // Add the select to the sentiment div
+    form.appendChild(sentiment);                   // Add the sentiment div to the form
 
     let comment = document.createElement("DIV"); // Create a new div for the comment its self
     comment.setAttribute("class", "form-group"); // Set its class

@@ -11,3 +11,10 @@ def create_response(message, code):
     response = jsonify(message)
     response.status_code = code
     return response
+
+def create_stdmsg(message, code):
+    message = {
+        "message": message,
+        "status": code,
+    }
+    return message

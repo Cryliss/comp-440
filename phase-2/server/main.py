@@ -1,5 +1,6 @@
 import pymysql
-from app import app, create_response
+from app import app
+from app import create_stdmsg, create_response
 from config import mysql
 from db import updatedb, procedurecall, queryalldb, queryonedb, querydb
 from validation import check_payload, check_blogpost
@@ -87,19 +88,13 @@ def add():
                 # Check Payload returned true, so we have malicious values in our data
                 # Return status code 418: I'm a teapot.
                 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
-                message = {
-                    'status': 418,
-                    'message': 'Im a teapot. Go away',
-                }
+                message = create_stdmsg('Im a teapot. Go away', 418)
                 return create_response(message, 418)
 
             if _passconfirmed != True:
                 # The password was not confirmed prior to being sent to us?
                 # Return status code 400: Bad Request
-                message = {
-                    'status': 400,
-                    'message': 'Password was not confirmed',
-                }
+                message = create_stdmsg('Password was not confirme', 400)
                 return create_response(message, 400)
 
             # Create the SQL query
@@ -113,18 +108,12 @@ def add():
             if data[0][0] == False:
                 # We didn't actually register the user when we called sp_register
                 # So let's return the reason message to the client
-                message = {
-                    'status': 409,
-                    'message': data[0][1],
-                }
+                message = create_stdmsg(data[0][1], 409)
                 # Return the response message to the client
                 return create_response(message, 409)
 
             # Okay so we didn't have any issues, so let's let the client know
-            message = {
-                'status': 200,
-                'message': 'User added successfully!',
-            }
+            message = create_stdmsg('User added successfully!', 200)
             # Return the response message to the client
             return create_response(message, 200)
         else:
@@ -162,10 +151,7 @@ def editblog():
 
         if _blogid and _subject and _description and _tags and request.method=="POST":
             if check_payload(str(_blogid)) or check_blogpost(_subject) or check_blogpost(_description) or check_blogpost(_tags):
-                message = {
-                    "message": "I'm a teapot. Go away.",
-                    "status": 418,
-                }
+                message = create_stdmsg("I'm a teapot. Go away.", 418)
                 return create_response(message, 418)
 
             # Select the creator the blog they want to update
@@ -174,10 +160,7 @@ def editblog():
             # Make sure our user is the one who made the blog
             user = session.get('username')
             if creator != user:
-                message = {
-                    "message": "You can't edit a blog post that isn't your own!",
-                    "status": 409,
-                }
+                message = create_stdmsg("You can't edit a blog post that isn't your own!", 409)
                 return create_response(message, 409)
 
             # Update the database
@@ -186,10 +169,7 @@ def editblog():
             updatedb(sqlQuery, bindData)
 
             # Create the response message
-            message = {
-                "message": "Blog post successfully updated.",
-                "status": 200,
-            }
+            message = create_stdmsg('Blog post successfully updated.')
             return create_response(message, 200)
         else:
             # Hm, we didn't get anything in our payload, return 404
@@ -211,18 +191,12 @@ def newpost():
 
         if _subject and _description and _tags and request.method=="POST":
             if check_blogpost(_subject) or check_blogpost(_tags):
-                message = {
-                    "message": "I'm a teapot. Go away.",
-                    "status": 418,
-                }
+                message = create_stdmsg("I'm a teapot. Go away.")
                 return create_response(message, 418)
 
             _poster = session.get('username')
             if _poster == None:
-                message = {
-                    "message": "User must be signed in to perform this action",
-                    "status": 403,
-                }
+                message = create_stdmsg('User must be signed in to perform this action', 403)
                 return create_response(message, 403)
 
             sqlQuery = 'CALL sp_insertPost(%s, %s, %s, NOW(), %s, @blogid, @message)'
@@ -232,10 +206,7 @@ def newpost():
             data = procedurecall(sqlQuery, bindData, 'SELECT @blogid, @message')
 
             if data[0][0] == -1:
-                message = {
-                    "message": data[0][1],
-                    "status": 409,
-                }
+                message = create_stdmsg(data[0][1], 409)
                 return create_response(message, 409)
 
             message = {
@@ -262,25 +233,16 @@ def newcomment():
 
         if _sentiment and _description and _blogid and request.method=="POST":
             if check_payload(_sentiment) or check_blogpost(_description):
-                message = {
-                    'status': 418,
-                    'message': "I'm a teapot. Go away.",
-                }
+                message = create_stdmsg("I'm a teapot. Go away.")
                 return create_response(message, 418)
 
             if _sentiment != 'positive' and _sentiment != 'negative':
-                message = {
-                    'status': 409,
-                    'message': "Invalid sentiment provided.",
-                }
+                message = create_stdmsg("Invalid sentiment provided", 409)
                 return create_response(message, 409)
 
             _poster = session.get('username')
             if _poster == None:
-                message = {
-                    "message": "User must be signed in to perform this action",
-                    "status": 403,
-                }
+                message = create_stdmsg('User must be signed in to perform this action', 403)
                 return create_response(message, 403)
 
             sqlQuery = 'CALL sp_comment(%s, %s, NOW(), %s, %s, @commentid, @message)'
@@ -290,10 +252,7 @@ def newcomment():
             data = procedurecall(sqlQuery, bindData, 'SELECT @commentid, @message')
 
             if data[0][0] == -1:
-                message = {
-                    "message": data[0][1],
-                    "status": 409,
-                }
+                message = create_stdmsg(data[0][1], 409)
                 return create_response(message, 409)
 
             message = {
@@ -327,7 +286,6 @@ def blogs():
                     tag = tag+' #'+t['tag']
 
             comments = queryalldb('SELECT commentid, sentiment, description, cdate, posted_by FROM comments WHERE blogid=%s',bindData)
-
             blog = {
                 "blogid": b['blogid'],
                 "subject": b['subject'],
@@ -347,10 +305,7 @@ def blogs():
 def comments(blogid):
     try:
         if check_payload(str(blogid)):
-            message = {
-                "message": "I'm a teapot. Go away.",
-                "status": 418,
-            }
+            message = create_stdmsg("I'm a teapot. Go away.", 418)
             return create_response(message, 418)
 
         # Select all from comments
@@ -364,10 +319,7 @@ def comments(blogid):
 def comment(commentid):
     try:
         if check_payload(str(commentid)):
-            message = {
-                "status": 418,
-                "message": "I'm a teapot. Go away."
-            }
+            message = create_stdmsg("I'm a teapot. Go away.")
             return create_response(message, 418)
         commentRow = queryonedb("SELECT * FROM comments where commentid=%s", commentid)
         return create_response(commentRow, 200)
@@ -383,10 +335,7 @@ def blog(blogid):
         # Check Payload returned true, so we have malicious values in our data
         # Return status code 418: I'm a teapot.
         # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
-        message = {
-            'status': 418,
-            'message': "I'm a teapot. Go away",
-        }
+        message = create_stdmsg("I'm a teapot. Go away.")
         return create_response(message, 418)
     try:
         # Get the requested data
@@ -414,10 +363,7 @@ def delete(username):
             # Check Payload returned true, so we have malicious values in our data
             # Return status code 418: I'm a teapot.
             # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
-            message = {
-                'status': 418,
-                'message': "I'm a teapot. Go away",
-            }
+            message = create_stdmsg("I'm a teapot. Go away.")
             return create_response(message, 418)
 
         # Create & execute the SQL query
@@ -426,10 +372,8 @@ def delete(username):
         updatedb(sqlQuery, bindData)
 
         # Send a message to the client letting them know all went well.
-        message = {
-            'status': 200,
-            'message': 'User ' + username + ' deleted successfully!',
-        }
+        text = 'User' + username + ' deleted successfully'
+        message = create_stdmsg(text, 200)
         return create_response(message, 200)
     except Exception as e:
         message = 'delete(' + username + '): failed to delete user. '+str(e)
@@ -511,10 +455,7 @@ def initializedb():
             cursor.execute(line)
 
         # Create our response to the client and return it
-        message = {
-            'status': 200,
-            'message': 'Database successfully initialized!',
-        }
+        message = create_stdmsg('Database successfully initialized!', 200)
         session['initialized'] = True
         return create_response(message, 200)
     except Exception as e:
@@ -544,10 +485,7 @@ def loginUser():
             if check_payload(_username) or check_payload(_password):
                 # Check Payload returned true, so we have some malicious data
                 # Return status code 418: I'm a teapot.
-                message = {
-                    'status': 418,
-                    'message': "I'm a teapot. Go away",
-                }
+                message = create_stdmsg("I'm a teapoot. Go away, 418")
                 return create_response(message, 418)
 
             # Our payload was fine, let's create a new SQL query with it then
@@ -559,26 +497,18 @@ def loginUser():
             # Check if the username was confirmed
             if data[0][0] == False:
                 # Username was not confirmed! Don't let them log in
-                message = {
-                    'status': 409,
-                    'message': 'Username does not exist!',
-                }
+                message = create_stdmsg('Username does not exit!', 409)
                 return create_response(message, 409)
 
+            # !!!!!! REALLY NEED TO HASH AND SALT OUR PASSWORDS !!!!!!!!!!!!
             # Check if our password was confirmed
             if data[0][1] == False:
                 # Password was not confirmed! Don't let them log in
-                message = {
-                    'status': 409,
-                    'message': 'Invalid password given',
-                }
+                message = create_stdmsg('Invalid password was given', 409)
                 return create_response(message, 409)
 
             # Both values were good, let's let the client know
-            message = {
-                'status': 200,
-                'message': 'User successfully logged in',
-            }
+            message = create_stdmsg('User successfully logged in', 200)
             session['username'] = _username
             return create_response(message, 200)
         else:
@@ -645,21 +575,163 @@ def userdata():
             }
             return create_response(userData, 200)
         else:
-            message = {
-                "message": "Database is not initialized! I can't get any data yet!",
-                "status": 400,
-            }
+            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
             return create_response(message, 400)
     except Exception as e:
         message = 'userdata: failed to retrieve user data '+str(e)
         print(message)
+
+# PHASE 3 QUERY ROUTES 
+@app.route('/api/query1', methods=["GET", "POST"])
+def query1():
+    try:
+        _json = request.json
+        _creator = _json["created_by"]
+
+        if session.get('initialized') == True and _creator and request.method=="POST":
+            if check_payload(_creator):
+                message = create_stdmsg("I'm a teapoot. Go away, 418")
+                return create_response(message, 418)
+            sqlQuery = 'SELECT * FROM blogs b WHERE b.created_by=%s AND EXISTS (SELECT * FROM comments c WHERE b.blogid=c.blogid AND c.sentiment="positive")'
+            bindData = (_creator,)
+            data = queryalldb(sqlQuery, bindData)
+            message = {
+                "blogs": data,
+                "status": 200,
+            }
+            return create_response(message,200)
+        else:
+            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
+            return create_response(message, 400)
+    except Exception as e:
+        message = 'query1: failed to retrieve data '+str(e)
+        print(message)
+
+@app.route('/api/query2', methods=["GET", "POST"])
+def query2():
+    try:
+        _json = request.json
+        _pdate = _json["pdate"]
+
+        if session.get('initialized') == True and _pdate and request.method=="POST":
+            if check_payload(_pdate):
+                message = create_stdmsg("I'm a teapoot. Go away, 418")
+                return create_response(message, 418)
+            sqlQuery = "SELECT DISTINCT created_by FROM blogs WHERE pdate IN (SELECT pdate FROM blogs WHERE pdate=%s)"
+            bindData = (_pdate,)
+            data = queryalldb(sqlQuery, bindData)
+            users = []
+            for user in data:
+                users.append(user["created_by"])
+            message = {
+                "users": users,
+                "status": 200,
+            }
+            return create_response(message,200)
+        else:
+            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
+            return create_response(message, 400)
+    except Exception as e:
+        message = 'query2: failed to retrieve data '+str(e)
+        print(message)
+
+@app.route('/api/query3', methods=["GET", "POST"])
+def query3():
+    try:
+        _json = request.json
+        _userx = _json["userx"]
+        _usery = _json["usery"]
+
+        if session.get('initialized') == True and _userx and _usery and request.method=="POST":
+            if check_payload(_userx) or check_payload(_usery):
+                message = create_stdmsg("I'm a teapoot. Go away, 418")
+                return create_response(message, 418)
+            sqlQuery = "SELECT DISTINCT leadername FROM follows WHERE followername=%s AND EXISTS (SELECT leadername FROM follows WHERE followername=%s);"
+            bindData = (_userx,_usery)
+            data = queryalldb(sqlQuery, bindData)
+            users = []
+            for user in data:
+                users.append(user["leadername"])
+            message = {
+                "users": users,
+                "status": 200,
+            }
+            return create_response(message,200)
+        else:
+            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
+            return create_response(message, 400)
+    except Exception as e:
+        message = 'query3: failed to retrieve data '+str(e)
+        print(message)
+
+@app.route('/api/query4')
+def query4():
+    try:
+        if session.get('initialized') == True:
+            sqlQuery = "SELECT DISTINCT username FROM user u WHERE NOT EXISTS (SELECT * FROM blogs WHERE created_by=u.username )"
+            data = queryalldb(sqlQuery, None)
+            users = []
+            for user in data:
+                users.append(user["username"])
+            message = {
+                "users": users,
+                "status": 200,
+            }
+            return create_response(message,200)
+        else:
+            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
+            return create_response(message, 400)
+    except Exception as e:
+        message = 'query4: failed to retrieve data '+str(e)
+        print(message)
+
+@app.route('/api/query5')
+def query5():
+    try:
+        if session.get('initialized') == True:
+            sqlQuery = "SELECT DISTINCT posted_by FROM comments c WHERE sentiment='negative' AND NOT EXISTS (SELECT DISTINCT posted_by FROM comments c2 WHERE c2.sentiment='positive' AND c2.posted_by=c.posted_by)"
+            data = queryalldb(sqlQuery, None)
+            users = []
+            for user in data:
+                users.append(user["posted_by"])
+            message = {
+                "users": users,
+                "status": 200,
+            }
+            return create_response(message,200)
+        else:
+            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
+            return create_response(message, 400)
+    except Exception as e:
+        message = 'query4: failed to retrieve data '+str(e)
+        print(message)
+
+@app.route('/api/query6')
+def query6():
+    try:
+        if session.get('initialized') == True:
+            sqlQuery = "SELECT DISTINCT created_by FROM blogs WHERE NOT EXISTS(SELECT DISTINCT sentiment FROM comments WHERE comments.sentiment='negative' AND comments.blogid=blogs.blogid)"
+            data = queryalldb(sqlQuery, None)
+            users = []
+            for user in data:
+                users.append(user["created_by"])
+            message = {
+                "users": users,
+                "status": 200,
+            }
+            return create_response(message,200)
+        else:
+            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
+            return create_response(message, 400)
+    except Exception as e:
+        message = 'query4: failed to retrieve data '+str(e)
+        print(message)
+
 # Basic route for error handling
 @app.errorhandler(404)
 def not_found(error=None):
-    message = {
-        'status': 404,
-        'message': 'Record not found: ' + request.url,
-    }
+    text = 'Record not found: ' + request.url
+    message = create_stdmsg(text, 404)
     return create_response(message, 404)
 
 if __name__ == "__main__":
