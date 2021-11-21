@@ -8,7 +8,6 @@ USE `blogger`;
 -- CONSTRAINT: 2 blog posts per day (per user)
 
 -- ALTER DATABASE blogger CHARACTER SET utf8 COLLATE utf8_general_ci;
-INSERT INTO user (username, password, firstName, lastName, email) VALUES ('chryliss', 'pass1234', 'Sabra', 'Bilodeau', 'sabrabilodeau@gmail.com');
 DROP PROCEDURE IF EXISTS sp_insertPost;
 
 DELIMITER $$
