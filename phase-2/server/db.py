@@ -27,6 +27,7 @@ def procedurecall(sqlQuery, bindData, procQuery):
     try:
         cursor.execute(charsetQuery)
         cursor.execute(sqlQuery, bindData)
+        conn.commit()
         cursor.execute(procQuery)
         conn.commit()
         data = cursor.fetchall()
