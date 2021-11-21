@@ -377,6 +377,7 @@ function createNewCommentElement(blogid) {
             }
             // Yep, so let's go ahead and try to add the comment to the database
             postComment(this.id, sentiment, description)
+            window.location.reload()
             return
         }
         // >.>
@@ -418,12 +419,13 @@ function postComment(blogid, sentiment, description) {
             if (body.status != 200) {
                 // No, create an error message an let the user know why
                 console.log(body.message)
-                alert("Comment not posted! ", body.message)
+                let msg = "Comment not posted! "+ body.message
+                alert(msg)
                 return
             }
             // Yep, let's create a success message for the user.
             console.log(body.message);
-            alert("Comment successfully added! Please refresh to see it.");
+            //alert("Comment successfully added! Please refresh to see it.");
             //addNewComment(blogid, body.commentid);
         }
     );

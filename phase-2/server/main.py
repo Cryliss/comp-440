@@ -183,7 +183,6 @@ def editblog():
 def newpost():
     try:
         _json = request.json
-        print(request)
 
         _subject = _json["subject"]
         _description = _json["description"]
@@ -204,7 +203,7 @@ def newpost():
 
             # Use updatedb function to perform the procedure call
             data = procedurecall(sqlQuery, bindData, 'SELECT @blogid, @message')
-
+            print(data)
             if data[0][0] == -1:
                 message = create_stdmsg(data[0][1], 409)
                 return create_response(message, 409)
@@ -581,7 +580,7 @@ def userdata():
         message = 'userdata: failed to retrieve user data '+str(e)
         print(message)
 
-# PHASE 3 QUERY ROUTES 
+# PHASE 3 QUERY ROUTES
 @app.route('/api/query1', methods=["GET", "POST"])
 def query1():
     try:
