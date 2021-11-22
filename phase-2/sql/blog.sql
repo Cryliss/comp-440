@@ -23,9 +23,10 @@ CREATE PROCEDURE sp_insertPost (
         DECLARE tag varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
         DECLARE numPosts int(2) DEFAULT NULL;
         DECLARE bid int(10) DEFAULT NULL;
+        DECLARE idx,prev_idx int;
 
         SET blogid = -1;
-        SET tag = tags;
+
 
         SELECT COUNT(*) INTO numPosts FROM blogs b WHERE b.created_by=posted_by AND b.pdate=pdate;
         IF numPosts = 2 THEN
@@ -41,12 +42,21 @@ CREATE PROCEDURE sp_insertPost (
                 SET blogid = bid;
                 SET message = 'Blog successfully added to the database.';
                 -- TODO: FIX THIS -- MAKES INSERT BREAK KINDA
-                WHILE tag != '' DO
-                    SET tag = SUBSTRING_INDEX(tags, ',', 1);
+                SET idx = LOCATE(',',tags,1);
+                SET prev_idx = 1;
+
+                WHILE idx > 0 DO
+                    SET tag = SUBSTR(tags, idx, idx-prev_idx);
                     START TRANSACTION;
                     INSERT IGNORE INTO blogstags ( blogid, tag ) VALUES ( bid, tag );
                     COMMIT;
+                    SET prev_idx = idx+1;
+                    SET idx = LOCATE(',', tags, prev_idx);
                 END WHILE;
+                SET tag = SUBSTR(tags, prev_idx);
+                START TRANSACTION;
+                INSERT IGNORE INTO blogstags ( blogid, tag ) VALUES ( bid, tag );
+                COMMIT;
             END IF;
         END IF;
     END $$

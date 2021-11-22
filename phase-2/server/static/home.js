@@ -46,47 +46,7 @@ window.onload=function() {
                 }
             }
 
-            // Create a new data object
-            let data = {
-                subject: subject,
-                description: description,
-                tags: tags
-            }
-
-            // Create a new request object and add our data to it
-            let req = {
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }
-
-            // Print out our request message to the console for debbuging
-            console.log(req)
-
-            // Send a fetch request to our api to initialize the database
-            fetch('http://127.0.0.1:5555/api/newpost', req).then(response => response.json())
-                .then((body) => {
-                    // Log the request body
-                    console.log(body);
-
-                    // Did we successfully initialize the database?
-                    if (body.status != 200) {
-                        // No, create an error message an let the user know why
-                        document.querySelector('.msg').classList.add('error');
-                        document.querySelector('.msg').innerHTML = body.message;
-                        return
-                    }
-                    // Yep, let's create a success message for the user.
-                    document.querySelector('.msg').classList.add('success');
-                    let message = body.dbmessage + " Blog ID# " + body.blogid;
-                    document.querySelector('.msg').innerHTML = message;
-
-                    //addNewBlog(body.blogid);
-                }
-            );
+            postBlog(subject, description, tags);
         }
     });
 }
@@ -377,7 +337,7 @@ function createNewCommentElement(blogid) {
             }
             // Yep, so let's go ahead and try to add the comment to the database
             postComment(this.id, sentiment, description)
-            window.location.reload()
+            //window.location.reload()
             return
         }
         // >.>
@@ -425,8 +385,52 @@ function postComment(blogid, sentiment, description) {
             }
             // Yep, let's create a success message for the user.
             console.log(body.message);
-            //alert("Comment successfully added! Please refresh to see it.");
+            alert("Comment successfully added! Please refresh to see it.");
             //addNewComment(blogid, body.commentid);
+        }
+    );
+}
+
+function postBlog(subject, description, tags) {
+    // Create a new data object
+    let data = {
+        subject: subject,
+        description: description,
+        tags: tags
+    }
+
+    // Create a new request object and add our data to it
+    let req = {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }
+
+    // Print out our request message to the console for debbuging
+    console.log(req)
+
+    // Send a fetch request to our api to initialize the database
+    fetch('http://127.0.0.1:5555/api/newpost', req).then(response => response.json())
+        .then((body) => {
+            // Log the request body
+            console.log(body);
+
+            // Did we successfully initialize the database?
+            if (body.status != 200) {
+                // No, create an error message an let the user know why
+                document.querySelector('.msg').classList.add('error');
+                document.querySelector('.msg').innerHTML = body.message;
+                return
+            }
+            // Yep, let's create a success message for the user.
+            document.querySelector('.msg').classList.add('success');
+            let message = body.dbmessage + " Blog ID# " + body.blogid;
+            document.querySelector('.msg').innerHTML = message;
+
+            //addNewBlog(body.blogid);
         }
     );
 }

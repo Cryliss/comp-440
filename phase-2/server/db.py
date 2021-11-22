@@ -9,7 +9,7 @@ def updatedb(sqlQuery, bindData):
     conn = mysql.connect()
     cursor = conn.cursor()
     try:
-        cursor.execute(charsetQuery)
+        #cursor.execute(charsetQuery)
         cursor.execute(sqlQuery, bindData)
         conn.commit()
     except Exception as e:
@@ -25,13 +25,10 @@ def procedurecall(sqlQuery, bindData, procQuery):
     conn = mysql.connect()
     cursor = conn.cursor()
     try:
-        cursor.execute(charsetQuery)
         cursor.execute(sqlQuery, bindData)
-        conn.commit()
         cursor.execute(procQuery)
         conn.commit()
         data = cursor.fetchall()
-        print(data)
         return data
     except Exception as e:
         message = 'procedurecall(' + sqlQuery + ') err: ' + str(e)
@@ -46,8 +43,6 @@ def queryalldb(sqlQuery, bindData):
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     try:
-        cursor.execute(charsetQuery)
-        conn.commit()
         if bindData == None:
             cursor.execute(sqlQuery)
             conn.commit()
@@ -70,7 +65,7 @@ def queryonedb(sqlQuery, bindData):
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     try:
-        cursor.execute(charsetQuery)
+
         if bindData == None:
             cursor.execute(sqlQuery)
             conn.commit()
@@ -92,8 +87,6 @@ def querydb(sqlQuery, bindData):
     conn = mysql.connect()
     cursor = conn.cursor()
     try:
-        cursor.execute(charsetQuery)
-        conn.commit()
         if bindData == None:
             cursor.execute(sqlQuery)
             conn.commit()
