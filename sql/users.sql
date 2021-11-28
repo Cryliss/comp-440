@@ -13,24 +13,28 @@
 -- requirement i made our usernames comp440_firstname
 
 -- Let's drop any previously created versions of user table
+USE `blogger`;
+
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = @saved_cs_client;
+
 DROP TABLE IF EXISTS user;
 
 -- Create new user table
 CREATE TABLE user (
-    username    varchar(45) NOT NULL,
-    password    varchar(45) NOT NULL,
-    firstName   varchar(45) NOT NULL,
-    lastName    varchar(45) NOT NULL,
-    email       varchar(100) NOT NULL
-);
+    `username` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `password` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `firstName` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+    `lastName` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+    `email` varchar(100) DEFAULT NULL,
+    PRIMARY KEY (`username`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Add a unique constraint on the email
 -- I initally thought email and username would be necesarry,
 -- but if we all have 'comp440' as a username it doesn't matter
 ALTER TABLE user ADD CONSTRAINT unique_email UNIQUE (email);
 
--- Make username our primary key
-ALTER TABLE user ADD PRIMARY KEY (username);
 
 -- 2. Sign up for a new user with information such as:
 -- username, password, password confirmed, first name, last name, email.
@@ -44,10 +48,21 @@ DROP PROCEDURE IF EXISTS sp_register;
 -- CALL sp_register('comp440_sabra', 'pass1234', true, 'Sabra', 'Bilodeau', 'sabra.bilodeau.352@my.csun.edu', @registered, @message);
 -- SELECT @registered, @message;
 DELIMITER $$
-CREATE PROCEDURE sp_register( IN username varchar(100), IN password varchar(45), IN passConfirmed boolean, IN firstName varchar(45), IN lastName varchar(45), IN email varchar(45), OUT registered boolean, OUT message varchar(255))
+CREATE PROCEDURE sp_register(
+    IN username varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+    IN password varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+    IN passConfirmed boolean,
+    IN firstName varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+    IN lastName varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+    IN email varchar(45),
+    OUT registered boolean, OUT message varchar(255)
+)
 BEGIN
     DECLARE usr varchar(45) DEFAULT '';
     DECLARE eml varchar(100) DEFAULT '';
+    SET registered = FALSE;
+    SET message = '';
+
     -- Has the password been confirmed?
     IF !passConfirmed THEN
         SET registered = FALSE;
@@ -55,14 +70,14 @@ BEGIN
     ELSE
         -- Let's make sure we don't already have a user with this username
         SELECT username INTO usr FROM user u WHERE u.username=username LIMIT 1;
-        IF usr != '' THEN
+        IF usr IS NOT NULL THEN
             -- Apparently we do .. lets set our out variables
             SET registered = FALSE;
             SET message = 'Username already exists!';
         ELSE
             -- We do not! Do we already have a user with this email?
-            SELECT email INTO eml FROM user WHERE username=usr LIMIT 1;
-            IF email = eml THEN
+            SELECT email INTO eml FROM user u WHERE u.username=username LIMIT 1;
+            IF eml IS NOT NULL THEN
                 -- Apparently we do .. lets set our out variables
                 SET registered = FALSE;
                 SET message = 'Email is already registered!';
@@ -83,9 +98,10 @@ DELIMITER ;
 
 -- Let's add Shawn and Faizan to the table using a traditional transation.
 START TRANSACTION;
-INSERT INTO user (username, password, firstName, lastName, email) VALUES ('comp440_faizan', 'pass1234', 'Faizan', 'Hussain', 'faizan.hussain.???@my.csun.edu');
-INSERT INTO user (username, password, firstName, lastName, email) VALUES ('comp440_shawn', 'pass1234', 'Shawn', 'Morrison', 'shawn.morrison.???@my.csun.edu');
-INSERT INTO user (username, password, firstName, lastName, email) VALUES ('comp440_sabra', 'pass1234', 'Sabra', 'Bilodeau', 'sabra.bilodeau.352@my.csun.edu');
+INSERT INTO user (username, password, firstName, lastName, email) VALUES ('faizan', 'pass1234', 'Faizan', 'Hussain', 'faizan.hussain.???@my.csun.edu');
+INSERT INTO user (username, password, firstName, lastName, email) VALUES ('shawn', 'pass1234', 'Shawn', 'Morrison', 'shawn.morrison.???@my.csun.edu');
+INSERT INTO user (username, password, firstName, lastName, email) VALUES ('sabra', 'pass1234', 'Sabra', 'Bilodeau', 'sabra.bilodeau.352@my.csun.edu');
+INSERT INTO user (username, password, firstName, lastName, email) VALUES ('batman','1234','bat','bat','nananana@batman.com'),('bob','12345','bob','bob','bobthatsme@yahoo.com'),('catlover','abcd','cat','cat','catlover@whiskers.com'),('doglover','efds','dog','dog','doglover@bark.net'),('jdoe','25478','joe','jod','jane@doe.com'),('jsmith','1111','john','smith','jsmith@gmail.com'),('matty','2222','mat','mat','matty@csun.edu'),('notbob','5555','not','bob','stopcallingmebob@yahoo.com'),('pacman','9999','pacman','pacman','pacman@gmail.com'),('scooby','8888','scoby','scoby','scooby@doo.net');
 COMMIT;
 
 -- 2. (cont) Unmatching passwords should be detected, as well.
@@ -99,7 +115,11 @@ DROP PROCEDURE IF EXISTS sp_login;
 -- CALL sp_login('comp440_sabra', 'pass1234', @passConfirmed);
 -- SELECT @passConfirmed;
 DELIMITER $$
-CREATE PROCEDURE sp_login( IN username varchar(45), IN password varchar(45), OUT userConfirmed BOOLEAN, OUT passConfirmed BOOLEAN )
+CREATE PROCEDURE sp_login(
+    IN username varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+    IN password varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+    OUT userConfirmed BOOLEAN, OUT passConfirmed BOOLEAN
+)
     BEGIN
         DECLARE uemail varchar(100) DEFAULT '';
         DECLARE us varchar(45) DEFAULT '';
@@ -107,10 +127,10 @@ CREATE PROCEDURE sp_login( IN username varchar(45), IN password varchar(45), OUT
         SET userConfirmed = FALSE;
 
         SELECT email INTO uemail FROM user u WHERE u.username=username;
-        IF uemail != '' THEN
+        IF uemail IS NOT NULL THEN
             SET userConfirmed = TRUE;
-            SELECT username INTO us FROM user u WHERE u.email=uemail AND u.password=password;
-            IF us != '' THEN
+            SELECT username INTO us FROM user u WHERE u.password=password AND u.username=username;
+            IF us IS NOT NULL THEN
                 SET passConfirmed = TRUE;
             END IF;
         END IF;

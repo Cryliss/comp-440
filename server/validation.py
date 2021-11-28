@@ -16,3 +16,10 @@ def check_payload(text):
     else:
         # None of the other conditions matched, we're probably ok?
         return False
+
+def check_blogpost(text):
+    if "'DROP TABLE" in text:
+        return True
+    if "'SELECT * FROM " in text:
+        return True;
+    return False

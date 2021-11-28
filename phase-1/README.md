@@ -10,45 +10,17 @@ Shawn Morrison
 
 # INSTRUCTIONS FOR LOCAL HOSTING
 
-## MySQL SERVER
 ON YOUR COMPUTER, YOU MUST HAVE A MYSQL SERVER SETUP IN THE FOLLOWING MANNER:
 
-### TERMINAL
-*These instructions are only for Mac users, apologies.*
-
-Open up a new terminal window and login into your MySQL server as root.  
-An example of how to do that: `/usr/local/mysql/bin/mysql -u root -p`
-
-Once logged in, run the following commands, one at a time.  
-
 ```sql
-CREATE DATABASE blogger;
+CREATE USER comp440 IDENTIFIED BY 'pass1234';
 
-USE blogger;
-
+CREATE DATABASE university;
+USE university;
 SOURCE /path/to/your/users.sql;
-SOURCE /path/to/your/blogs.sql;
-SOURCE /path/to/your/blog.sql;
-
-CREATE USER comp440 IDENTIFIED BY 'pass1234';  
-GRANT CREATE, DROP, DELETE, INSERT, SELECT, UPDATE ON blogger.* TO  'comp440'@'localhost';
 ```
 
-### MySQL Workbench
-Create a new schema blogger.  
-
-Create a new user `comp440` with the password `pass1234` and grant the privileges `CREATE`, `DROP`, `DELETE`, `INSERT`, `SELECT`, `UPDATE` to the user for the database.  
-[Help on Users and Privileges](https://dev.mysql.com/doc/workbench/en/wb-mysql-connections-navigator-management-users-and-privileges.html)
-
-Open up the `user.sql` file, found in `phase-2/sql/users.sql` and execute it using the lightning bolt. [Nothing tells you it's done, just assume it's done.]
-
-Open up the `blogs.sql` file, found in `phase-2/sql/blogs.sql` and execute it using the lightning bolt.
-
-Open up the `blog.sql` file, found in `phase-2/sql/blog.sql` and execute it using the lightning bolt.
-
-## PYTHON SERVER 
-
-### MAC -- TERMINAL
+## MAC -- TERMINAL
 1. Create an isolated Python environment in a directory external to your project and activate it:
 
   ```bash
@@ -65,7 +37,7 @@ Open up the `blog.sql` file, found in `phase-2/sql/blog.sql` and execute it usin
 
 3. Edit `config.py` to include your MYSQL database login information. [Already set up for comp440, pass1234 so if that's your login, you're fine.]
 
-4. Edit `main.py` line# **408**. Edit it to include the file path for your `blogs.sql` file.
+4. Edit `main.py` line# **305**. Edit it to include the filepath for your `university-1.sql` file.
 
 5. Run the application:
 
@@ -79,8 +51,8 @@ Open up the `blog.sql` file, found in `phase-2/sql/blog.sql` and execute it usin
   http://127.0.0.1:5555
   ```
 
-### PC -- COMMAND LINE
-*Use PowerShell to run your Python packages.*
+## PC -- COMMAND LINE
+### Use PowerShell to run your Python packages.
 
 1. Locate your installation of PowerShell.
 
@@ -102,7 +74,7 @@ Open up the `blog.sql` file, found in `phase-2/sql/blog.sql` and execute it usin
 
 5. Edit `config.py` to include your MYSQL database login information. [Already set up for comp440, pass1234 so if that's your login, you're fine.]
 
-6. Edit `main.py` line# **408**. Edit it to include the filepath for your `blogs.sql` file.
+6. Edit `main.py` line# **305**. Edit it to include the filepath for your `university-1.sql` file.
 
 7. Run the application:
 

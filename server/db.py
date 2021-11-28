@@ -1,8 +1,6 @@
 import pymysql
 from config import mysql
 
-charsetQuery = 'ALTER DATABASE blogger CHARACTER SET utf8 COLLATE utf8_general_ci'
-
 # Function for performing update queries to the database.
 def updatedb(sqlQuery, bindData):
     # Make a new connection to the MySQL server
