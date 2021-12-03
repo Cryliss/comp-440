@@ -68,7 +68,7 @@ def register():
 
 # Route for the queries page
 @app.route('/queries.html')
-def register():
+def queries():
     # Is someone logged in?
     username = session.get('username')
     if username == None:
