@@ -6,7 +6,7 @@ from db import updatedb, procedurecall, queryalldb, queryonedb, querydb
 from validation import check_payload, check_blogpost
 from flask import flash, request, session, redirect, render_template
 
-sqlFile = "/Users/sabra/go/src/comp-440/phase-2/sql/blogs.sql"
+sqlFile = "/Users/sabra/go/src/comp-440/sql/blogs.sql"
 
 @app.route('/')
 def index():
@@ -172,7 +172,7 @@ def editblog():
             updatedb(sqlQuery, bindData)
 
             # Create the response message
-            message = create_stdmsg('Blog post successfully updated.')
+            message = create_stdmsg('Blog post successfully updated.', 200)
             return create_response(message, 200)
         else:
             # Hm, we didn't get anything in our payload, return 404
@@ -193,7 +193,7 @@ def newpost():
 
         if _subject and _description and _tags and request.method=="POST":
             if check_blogpost(_subject) or check_blogpost(_tags):
-                message = create_stdmsg("I'm a teapot. Go away.")
+                message = create_stdmsg("I'm a teapot. Go away.", 418)
                 return create_response(message, 418)
 
             _poster = session.get('username')
@@ -321,7 +321,7 @@ def comments(blogid):
 def comment(commentid):
     try:
         if check_payload(str(commentid)):
-            message = create_stdmsg("I'm a teapot. Go away.")
+            message = create_stdmsg("I'm a teapot. Go away.", 418)
             return create_response(message, 418)
         commentRow = queryonedb("SELECT * FROM comments where commentid=%s", commentid)
         return create_response(commentRow, 200)
@@ -337,7 +337,7 @@ def blog(blogid):
         # Check Payload returned true, so we have malicious values in our data
         # Return status code 418: I'm a teapot.
         # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
-        message = create_stdmsg("I'm a teapot. Go away.")
+        message = create_stdmsg("I'm a teapot. Go away.", 418)
         return create_response(message, 418)
     try:
         # Get the requested data
@@ -365,7 +365,7 @@ def delete(username):
             # Check Payload returned true, so we have malicious values in our data
             # Return status code 418: I'm a teapot.
             # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
-            message = create_stdmsg("I'm a teapot. Go away.")
+            message = create_stdmsg("I'm a teapot. Go away.", 418)
             return create_response(message, 418)
 
         # Create & execute the SQL query
@@ -487,7 +487,7 @@ def loginUser():
             if check_payload(_username) or check_payload(_password):
                 # Check Payload returned true, so we have some malicious data
                 # Return status code 418: I'm a teapot.
-                message = create_stdmsg("I'm a teapoot. Go away, 418")
+                message = create_stdmsg("I'm a teapoot. Go away", 418)
                 return create_response(message, 418)
 
             # Our payload was fine, let's create a new SQL query with it then
@@ -495,7 +495,7 @@ def loginUser():
             bindData = (_username, _password)
 
             data = procedurecall(sqlQuery, bindData, 'SELECT @userConfirmed, @passConfirmed')
-
+            print(data)
             # Check if the username was confirmed
             if data[0][0] == False:
                 # Username was not confirmed! Don't let them log in
@@ -517,6 +517,10 @@ def loginUser():
             # Hm, we didn't get anything in our payload, return 404
             return not_found()
     except Exception as e:
+        if str(e) == "'cryptography' package is required for sha256_password or caching_sha2_password auth methods":
+            # Password was not confirmed! Don't let them log in
+            message = create_stdmsg('Invalid password was given', 409)
+            return create_response(message, 409)
         message = 'loginUser: failed to login user. '+str(e)
         print(message)
 
@@ -592,7 +596,7 @@ def query1():
 
         if session.get('initialized') == True and _creator and request.method=="POST":
             if check_payload(_creator):
-                message = create_stdmsg("I'm a teapoot. Go away, 418")
+                message = create_stdmsg("I'm a teapoot. Go away", 418)
                 return create_response(message, 418)
             sqlQuery = 'SELECT * FROM blogs b WHERE b.created_by=%s AND EXISTS (SELECT * FROM comments c WHERE b.blogid=c.blogid AND c.sentiment="positive")'
             bindData = (_creator,)
@@ -617,7 +621,7 @@ def query2():
 
         if session.get('initialized') == True and _pdate and request.method=="POST":
             if check_payload(_pdate):
-                message = create_stdmsg("I'm a teapoot. Go away, 418")
+                message = create_stdmsg("I'm a teapoot. Go away", 418)
                 return create_response(message, 418)
             sqlQuery = "SELECT DISTINCT created_by FROM blogs WHERE pdate IN (SELECT pdate FROM blogs WHERE pdate=%s)"
             bindData = (_pdate,)
@@ -646,9 +650,9 @@ def query3():
 
         if session.get('initialized') == True and _userx and _usery and request.method=="POST":
             if check_payload(_userx) or check_payload(_usery):
-                message = create_stdmsg("I'm a teapoot. Go away, 418")
+                message = create_stdmsg("I'm a teapoot. Go away", 418)
                 return create_response(message, 418)
-            sqlQuery = "SELECT DISTINCT leadername FROM follows WHERE followername=%s AND EXISTS (SELECT leadername FROM follows WHERE followername=%s);"
+            sqlQuery = "SELECT DISTINCT f.leadername FROM follows f INNER JOIN follows f2 ON f2.leadername=f.leadername WHERE f.followername=%s AND f2.followername=%s;"
             bindData = (_userx,_usery)
             data = queryalldb(sqlQuery, bindData)
             users = []

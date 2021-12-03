@@ -121,16 +121,15 @@ CREATE PROCEDURE sp_login(
     OUT userConfirmed BOOLEAN, OUT passConfirmed BOOLEAN
 )
     BEGIN
-        DECLARE uemail varchar(100) DEFAULT '';
-        DECLARE us varchar(45) DEFAULT '';
+        DECLARE pass varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '';
+        DECLARE us varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '';
         SET passConfirmed = FALSE;
         SET userConfirmed = FALSE;
 
-        SELECT email INTO uemail FROM user u WHERE u.username=username;
-        IF uemail IS NOT NULL THEN
+        SELECT password INTO pass FROM user u WHERE u.username=username AND u.password = password;
+        IF pass IS NOT NULL THEN
             SET userConfirmed = TRUE;
-            SELECT username INTO us FROM user u WHERE u.password=password AND u.username=username;
-            IF us IS NOT NULL THEN
+            IF pass = password THEN
                 SET passConfirmed = TRUE;
             END IF;
         END IF;
