@@ -66,6 +66,17 @@ def register():
     # Nope, so let's go ahead and render the register template
     return render_template('register.html')
 
+# Route for the queries page
+@app.route('/queries.html')
+def register():
+    # Is someone logged in?
+    username = session.get('username')
+    if username == None:
+        # Yep, so let's redirect them to the home screen
+        return redirect('login.html', code=302)
+    # Nope, so let's go ahead and render the register template
+    return render_template('queries.html')
+
 # Let's create a route for our app that adds a user to our database
 # We can get it by using a url like:
 # http://127.0.0.1:8080/add
