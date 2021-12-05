@@ -15,7 +15,7 @@ Repository for COMP 440: Database Design Group Project
 | :---: | :------: | :--------- |
 |   1   | 11/08/21 | [Demo](https://youtu.be/YmP42iaXkLc) |
 |   2   | 11/22/21 | [Demo](https://youtu.be/LNYtWK05jiI)   |
-|   3   | 12/06/21 | [Demo]()   |
+|   3   | 12/06/21 | N/A   |
 
 # INSTRUCTIONS FOR LOCAL HOSTING
 
