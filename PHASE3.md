@@ -1,5 +1,5 @@
 # TODO
-- [ ] Create a UI for the user to perform the 6 queries below.  
+- [x] Create a UI for the user to perform the 6 queries below.  
 - [x] Create API routes to perform the queries.
 
 Example fetch requests and sample responses are given.
