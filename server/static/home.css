@@ -1,5 +1,5 @@
 /* Home HTML template & some css taken from:
-    https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_webpage&stacked=h 
+    https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_webpage&stacked=h
  */
 
 /* Remove the navbar's default margin-bottom and rounded borders */
@@ -82,4 +82,12 @@ footer {
         padding: 15px;
       }
     .row.content {height:auto;}
+}
+
+.table--hidden {
+  display: none;
+}
+
+.list--hidden {
+    display: none;
 }
