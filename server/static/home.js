@@ -157,9 +157,9 @@ function createBlogElement(blog) {
 
     // Create a new text node for the subject
     let subjText = document.createTextNode(blog["subject"]);
-    let subjNode = document.createElement("H3"); // Create a new H3 element
-    subjNode.appendChild(subjText);              // Add the text node to it
-    div.appendChild(subjNode);                   // Add the subject to the main div
+    let subjNode = document.createElement("H3");
+    subjNode.appendChild(subjText);
+    div.appendChild(subjNode);
 
     // Grab the post date and split up at the spaces -
     // Current format: Sun, 15 Mar 2020 00:00:00 GMT
@@ -175,21 +175,21 @@ function createBlogElement(blog) {
 
     // Create a new paragraph element for the poster information
     let posterNode = document.createElement("P");
-    posterNode.appendChild(posterText);         // Add the text node to it
-    div.appendChild(posterNode);                // Add the poster info to the div
+    posterNode.appendChild(posterText);
+    div.appendChild(posterNode);
 
     // Create a new text node for the description
     let descText = document.createTextNode(blog["description"]);
-    let descNode = document.createElement("P"); // Create a new P element for it
-    descNode.appendChild(descText);             // Add the text node to the p
-    div.appendChild(descNode);                  // Add description to the main div
+    let descNode = document.createElement("P");
+    descNode.appendChild(descText);
+    div.appendChild(descNode);
 
     // Create a new text node for the tags
     // Tags are already returned from the Python server in the correct format.
     let tagsText = document.createTextNode(blog["tags"]);
-    let tagsNode = document.createElement("P"); // Create a n P element for it
-    tagsNode.appendChild(tagsText);             // Add the text node to the p
-    div.appendChild(tagsNode);                  // Add tags to the main div
+    let tagsNode = document.createElement("P");
+    tagsNode.appendChild(tagsText);
+    div.appendChild(tagsNode);
 
     // Add a paragraph element the main div to create a gap between the post
     // and its comments (I'm not actually sure if this is happening?)
@@ -211,8 +211,8 @@ function createBlogElement(blog) {
     // Next, create a div for the user to a post a comment with using our
     // createNewCommentElement function
     let newCommentDiv = createNewCommentElement(blog["blogid"]);
-    newCommentDiv.setAttribute('class', 'well'); // Set the class attribute to be well
-    div.appendChild(newCommentDiv);             // Add it to our main div
+    newCommentDiv.setAttribute('class', 'well');
+    div.appendChild(newCommentDiv);
 
     // Add the fully formed blog div to the blogs column, that holds all the blogs
     blogsCol.appendChild(div);
@@ -232,84 +232,75 @@ function createCommentElement(c) {
     let comment_date = cdate[0] + " " + cdate[1] + " " + cdate[2] + " " + cdate[3];
     let commenter = c.posted_by + " on " + comment_date;
 
-    // Create a text node for the commenter string we just created
     let commenterText = document.createTextNode(commenter);
-
-    // Create a H4 element for the commenter information
     let commenterDiv = document.createElement("H4");
-    commenterDiv.appendChild(commenterText);    // Add the text node to it
-    commentsDiv.appendChild(commenterDiv);      // Add it to the main comments div
+    commenterDiv.appendChild(commenterText);
+    commentsDiv.appendChild(commenterDiv);
 
-    // Create a string to display the sentiment
     let sentimentText = "Sentiment: "+c.sentiment;
-
-    // Create a new paragraph element for the sentiment
     let sentimentNode = document.createElement("P");
-
-    // Add a text node to it using the sentimentText
     sentimentNode.appendChild(document.createTextNode(sentimentText));
-    commentsDiv.appendChild(sentimentNode);     // Add it to the main comments div
+    commentsDiv.appendChild(sentimentNode);
 
-    // Create a new paragraph element for the description
     let descNode = document.createElement("P");
     descNode.appendChild(document.createTextNode(c.description));
-    commentsDiv.appendChild(descNode);          // Add it to the main comments div
+    commentsDiv.appendChild(descNode);
 
     return commentsDiv;
 }
 
 // Creates and returns a new comment element
 function createNewCommentElement(blogid) {
-    let form = document.createElement("FORM");   // Create a new form elemnt
-    form.setAttribute("id", blogid);             // Set its ID = to the blog its posted on
+    let form = document.createElement("FORM");
+    form.setAttribute("id", blogid);
 
-    let sentiment = document.createElement("DIV"); // Create a new div for the sentiment
-    sentiment.setAttribute("class", "form-group"); // Set its class
+    let sentiment = document.createElement("DIV");
+    sentiment.setAttribute("class", "form-group");
 
-    let label = document.createElement("LABEL");   // Create a new label element
-    label.setAttribute("for", "sentimentSelect");  // Set what the label is for
-    label.appendChild(document.createTextNode("Sentiment")) // Add a text node to it
-    sentiment.appendChild(label);                  // Add the label to the sentiment div
+    let label = document.createElement("LABEL");
+    label.setAttribute("for", "sentimentSelect");
+    label.appendChild(document.createTextNode("Sentiment"))
+    sentiment.appendChild(label);
 
-    let select = document.createElement("SELECT"); // Create a new select element
-    select.setAttribute('class', 'form-control');  // Set its class
-    select.setAttribute('id', 'sentimentSelect');  // Set its ID
+    let select = document.createElement("SELECT");
+    select.setAttribute('class', 'form-control');
+    select.setAttribute('id', 'sentimentSelect');
 
-    let posNode = document.createElement("OPTION"); // Create an option element
-    let posText = document.createTextNode("positive"); // Create a text node
-    posNode.appendChild(posText);                  // Add the text node to the element
-    select.appendChild(posNode);                   // Add that to the select element
+    let posNode = document.createElement("OPTION");
+    let posText = document.createTextNode("positive");
+    posNode.appendChild(posText);
+    select.appendChild(posNode);
 
     // Repeat above but for the negative sentiment
     let negNode = document.createElement("OPTION");
     let negText = document.createTextNode("negative");
-    negNode.appendChild(negText);                  // Add text node to the option element
-    select.appendChild(negNode);                   // Add the negative option to the select
-    sentiment.appendChild(select);                 // Add the select to the sentiment div
-    form.appendChild(sentiment);                   // Add the sentiment div to the form
+    negNode.appendChild(negText);
+    select.appendChild(negNode);
+    sentiment.appendChild(select);
+    form.appendChild(sentiment);
 
-    let comment = document.createElement("DIV"); // Create a new div for the comment its self
-    comment.setAttribute("class", "form-group"); // Set its class
+    let comment = document.createElement("DIV");
+    comment.setAttribute("class", "form-group");
 
-    let labelc = document.createElement("LABEL"); // Create a new label element for it
-    labelc.setAttribute("for", "cDescField")      // Set what the label is for
-    labelc.appendChild(document.createTextNode("Description")) // Add a text node to id
-    comment.appendChild(labelc);                  // Add the label to the comment div
+    let labelc = document.createElement("LABEL");
+    labelc.setAttribute("for", "cDescField");
+    labelc.appendChild(document.createTextNode("Description"));
+    comment.appendChild(labelc);
 
     // Create a textarea element for the user to write their comment in
     let description = document.createElement("TEXTAREA");
-    description.setAttribute("class", "form-control"); // Set its class
-    description.setAttribute("type", "text");          // Set its type
-    comment.appendChild(description);                  // Add it to the comment div
-    form.appendChild(comment);                         // Add the comment div to the form
+    description.setAttribute("class", "form-control");
+    description.setAttribute("type", "text");
+    comment.appendChild(description);
+    form.appendChild(comment);
 
     // Create a comment button and it to the form
-    let commentButton = document.createElement("BUTTON");  // Create comment element
-    let commentText = document.createTextNode("Comment "); // Create text node
-    commentButton.appendChild(commentText);                // Add it to the comment
-    commentButton.setAttribute("type", "submit");          // Set its type
-    commentButton.setAttribute("class", "btn");            // Set its class
-    form.appendChild(commentButton);                       // Add the button to the form
+    let commentButton = document.createElement("BUTTON");
+    let commentText = document.createTextNode("Comment ");
+    commentButton.appendChild(commentText);
+    commentButton.setAttribute("type", "submit");
+    commentButton.setAttribute("class", "btn");
+    form.appendChild(commentButton);
 
     // Add an event listener to the form for when the user hits submit
     form.addEventListener("submit", function(e) {
@@ -337,7 +328,6 @@ function createNewCommentElement(blogid) {
             }
             // Yep, so let's go ahead and try to add the comment to the database
             postComment(this.id, sentiment, description)
-            //window.location.reload()
             return
         }
         // >.>
