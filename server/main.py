@@ -605,7 +605,11 @@ def query1():
         _json = request.json
         _creator = _json["created_by"]
 
-        if session.get('initialized') == True and _creator and request.method=="POST":
+        if session.get('initialized') == False:
+            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
+            return create_response(message, 400)
+
+        if _creator and request.method=="POST":
             if check_payload(_creator):
                 message = create_stdmsg("I'm a teapoot. Go away", 418)
                 return create_response(message, 418)
@@ -618,7 +622,7 @@ def query1():
             }
             return create_response(message,200)
         else:
-            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
+            message = create_stdmsg("You must giver a user name in the query!", 400)
             return create_response(message, 400)
     except Exception as e:
         message = 'query1: failed to retrieve data '+str(e)
@@ -630,7 +634,11 @@ def query2():
         _json = request.json
         _pdate = _json["pdate"]
 
-        if session.get('initialized') == True and _pdate and request.method=="POST":
+        if session.get('initialized') == False:
+            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
+            return create_response(message, 400)
+
+        if _pdate and request.method=="POST":
             if check_payload(_pdate):
                 message = create_stdmsg("I'm a teapoot. Go away", 418)
                 return create_response(message, 418)
@@ -646,7 +654,7 @@ def query2():
             }
             return create_response(message,200)
         else:
-            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
+            message = create_stdmsg("You must giver a post date in the query!", 400)
             return create_response(message, 400)
     except Exception as e:
         message = 'query2: failed to retrieve data '+str(e)
@@ -659,7 +667,11 @@ def query3():
         _userx = _json["userx"]
         _usery = _json["usery"]
 
-        if session.get('initialized') == True and _userx and _usery and request.method=="POST":
+        if session.get('initialized') == False:
+            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
+            return create_response(message, 400)
+
+        if _userx and _usery and request.method=="POST":
             if check_payload(_userx) or check_payload(_usery):
                 message = create_stdmsg("I'm a teapoot. Go away", 418)
                 return create_response(message, 418)
@@ -675,7 +687,7 @@ def query3():
             }
             return create_response(message,200)
         else:
-            message = create_stdmsg("Database must be initialized before any data can be retrieved!", 400)
+            message = create_stdmsg("You must giver two usernames in the query!", 400)
             return create_response(message, 400)
     except Exception as e:
         message = 'query3: failed to retrieve data '+str(e)
