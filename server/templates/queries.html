@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Queries</title>
+
+    <!-- Bootstrap -->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'home.css') }}">
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='queries.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button
+            type="button"
+            class="navbar-toggle"
+            data-toggle="collapse"
+            data-target="#myNavbar"
+          >
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Blogger</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li><a href="/home.html">Home</a></li>
+            <li class="active"><a href="/queries.html">Queries</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="/logout"
+                ><span class="glyphicon glyphicon-log-in"></span> Logout</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main page content -->
+    <div class="container-fluid text-center">
+        <div class="row content">
+            <!-- Sidebar for followers and following -->
+            <div class="col-sm-2 text-left">
+                <div class="well">
+                    <h3>Followers</h3>
+                    <div class="followers">
+                        <ul id="followers"></ul>
+                    </div>
+                </div>
+                <div class="well">
+                    <h3>Following</h3>
+                    <div class="following">
+                        <ul id="following"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center content -->
+            <div class="col-sm-8">
+                <!-- New row -->
+                <div class="row">
+                    <!-- New column for query 1 -->
+                    <div class="col">
+                        <div class="panel panel-default text-left">
+                            <div class="newpost">
+                                <form class="form" id="query1">
+                                    <h4>Query 1</h4>
+                                    <div class="msg"></div>
+                                    <p>
+                                        <i>List all blogs posted by a user that have only had positive comments on them.</i>
+
+                                        <br/>
+                                        <br/>
+                                    </p>
+
+                                    <div id="query1Input">
+                                        <!-- input for username -->
+                                        <label for="username">Username:</label>
+                                        <input type="text" id="query1User">
+                                    </div>
+
+                                    <br/>
+
+                                    <div>
+                                        <!-- input submit button -->
+                                        <input class="btn" id="runQueryOneButton" type="submit" value="Run">
+                                    </div>
+
+                                </form>
+
+                                <table class="table table-striped table--hidden" id="queryOneTable">
+                                    <tr  class="bg-info">
+                                        <th>Blog ID</th>
+                                        <th>Created By</th>
+                                        <th>Description</th>
+                                        <th>Post Date</th>
+                                        <th>Subject</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New row -->
+                <div class="row">
+                    <!-- New column for query 2 -->
+                    <div class="col">
+                        <div class="panel panel-default text-left">
+                            <div class="newpost">
+                                <form class="form" id="query2">
+                                    <h4>Query 2</h4>
+                                    <div class="msg"></div>
+                                    <p>
+                                        <i>List all users who posted the most number of blogs on a given date.</i>
+
+                                        <br/>
+                                        <br/>
+                                    </p>
+
+                                    <div id="query2Input">
+                                        <!-- input for username -->
+                                        <label for="query2Date">Post Date:</label>
+                                        <input type="date" id="query2Date">
+                                    </div>
+
+                                    <br/>
+
+                                    <div>
+                                        <!-- input submit button -->
+                                        <input class="btn" id="runQueryTwoButton" type="submit" value="Run">
+                                    </div>
+
+                                </form>
+                                <div class="list--hidden" id="queryTwoResults"> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New row -->
+                <div class="row">
+                    <!-- New column for query 3 -->
+                    <div class="col">
+                        <div class="panel panel-default text-left">
+                            <div class="newpost">
+                                <form class="form" id="query3">
+                                    <h4>Query 3</h4>
+                                    <div class="msg" id="msg"></div>
+                                    <p>
+                                        <i>List all users who are followed by both of the given users.</i>
+
+                                        <br/>
+                                        <br/>
+                                    </p>
+
+                                    <div id="query3Input1">
+                                        <!-- input for username 1 -->
+                                        <label for="username">Username1:</label>
+                                        <input type="text" id="query3User1">
+                                    </div>
+
+                                    <div id="query3Input2">
+                                        <!-- input for username 2-->
+                                        <label for="username">Username2:</label>
+                                        <input type="text" id="query3User2">
+                                    </div>
+
+                                    <br/>
+
+                                    <div>
+                                        <!-- input submit button -->
+                                        <input class="btn" id="runQueryThreeButton" type="submit" value="Run">
+                                    </div>
+                                </form>
+                                <div class="list--hidden"id="queryThreeResults"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New row -->
+                <div class="row">
+                    <!-- New column for query 4 -->
+                    <div class="col">
+                        <div class="panel panel-default text-left">
+                            <div class="newpost">
+                                <h4>Query 4</h4>
+                                <div class="msg" id="msg"></div>
+                                <p>
+                                    <i>List all users who have never posted a blog.</i>
+
+                                    <br/>
+                                    <br/>
+                                </p>
+                                <button type="button" class="btn btn-default btn-sm" id="runQueryFourButton">
+                                    Run
+                                </button>
+                                <div class="list--hidden" id="queryFourResults"> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- New row -->
+                <div class="row">
+                    <!-- New column for query 5 -->
+                    <div class="col">
+                        <div class="panel panel-default text-left">
+                            <div class="newpost">
+                                <h4>Query 5</h4>
+                                <div class="msg" id="msg"></div>
+                                <p>
+                                    <i>List all users who have only posted negative comments.</i>
+
+                                    <br/>
+                                    <br/>
+                                </p>
+                                <button type="button" class="btn btn-default btn-sm" id="runQueryFiveButton">
+                                    Run
+                                </button>
+                                <div class="list--hidden" id ="queryFiveResults"> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New row -->
+                <div class="row">
+                    <!-- New column for query 6 -->
+                    <div class="col">
+                        <div class="panel panel-default text-left">
+                            <div class="newpost">
+                                <h4>Query 6</h4>
+                                <div class="msg" id="msg"></div>
+                                <p>
+                                    <i>List all users who have never received a negative comment.</i>
+
+                                    <br/>
+                                    <br/>
+                                </p>
+                                <button type="button" class="btn btn-default btn-sm" id="runQuerySixButton">
+                                    Run
+                                </button>
+                                <div class="list--hidden" id="querySixResults"> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hobbies content -->
+            <div class="col-sm-2 text-left">
+                <div class="well">
+                    <h3>Hobbies</h3>
+                    <ul id="hobbies"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="container-fluid text-center">
+      <p>COMP 440 Database Desgin Project</p>
+      <p>By: Sabra Bilodeau | Faizan Hussain | Shawn Morrison</p>
+    </footer>
+</body>
+</html>
